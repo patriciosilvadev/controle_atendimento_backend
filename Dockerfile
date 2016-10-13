@@ -2,14 +2,14 @@
 FROM hypriot/rpi-node:0.12.0
 
 # make the src folder available in the docker image
-ADD src/ /src
+ADD / /src
 WORKDIR /src
 
 # install the dependencies from the package.json file
 RUN npm install
 
 # make port 80 available outside of the image
-EXPOSE 80
+EXPOSE 4000
 
 # start node with the index.js file of our hello-world application
-CMD ["node", "index.js"]
+CMD ["node", "app.js"]
