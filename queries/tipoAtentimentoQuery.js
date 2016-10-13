@@ -1,4 +1,20 @@
-var db = require('../database/postgresqlDB');
+var promise = require('bluebird');
+
+var options = {
+  // Initialization Options
+  promiseLib: promise
+};
+
+var pgp = require('pg-promise')(options);
+var connectionString = {
+    //host: '192.168.0.50',
+    host:process.env.db_url,
+    port: 5432,
+    database: 'atendimento_db',
+    user: 'redhat',
+    password: 'redhat'
+};
+var db = pgp(connectionString);
 
 // add query functions
 function getTodosUsuarios(req, res, next) {
@@ -56,6 +72,7 @@ function update(req, res, next) {
   /*db.none('update usuario set nome=$1, email=$2, username=$3, password=$4, tipo=$5 where id=$6',
     [req.body.name, req.body.breed, parseInt(req.body.age),
       req.body.sex, parseInt(req.params.id)])*/
+    req.params.usuario_id=parseInt(req.params.usuario_id);
     db.none('update usuario set nome=${nome}, email=${email}, username=${username}, password=${password}, tipo=${tipo} where id=${usuario_id}',
     req.body)
     .then(function () {

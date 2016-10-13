@@ -1,4 +1,20 @@
-var db = require('../database/postgresqlDB');
+var promise = require('bluebird');
+
+var options = {
+  // Initialization Options
+  promiseLib: promise
+};
+
+var pgp = require('pg-promise')(options);
+var connectionString = {
+    //host: '192.168.0.50',
+    host:process.env.db_url,
+    port: 5432,
+    database: 'atendimento_db',
+    user: 'redhat',
+    password: 'redhat'
+};
+var db = pgp(connectionString);
 
 // add query functions
 function getTodosUsuarios(req, res, next) {

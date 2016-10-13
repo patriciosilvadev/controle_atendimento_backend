@@ -2,22 +2,22 @@ var express = require('express');
 var router = express.Router();
 
 
-var db = require('../queries/usuarioQuery');
+var db_usuarios = require('../queries/usuarioQuery');
 
+//cors
 router.all("*",function(req, res, next) {
-  //console.log("optins "+req.headers);
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,DELETE,POST");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-router.get('/api/usuarios', db.all);
-router.get('/api/usuarios/:username', db.fetch);
-router.post('/api/usuarios', db.create);
 
-//router.put('/api/puppies/:id', db.updatePuppy);
-//router.delete('/api/puppies/:id', db.removePuppy);
-
+//usuarios routers
+router.get('/api/usuarios', db_usuarios.all);
+router.get('/api/usuarios/:username', db_usuarios.fetch);
+router.post('/api/usuarios', db_usuarios.create);
+router.put('/api/usuarios', db_usuarios.update);
+router.delete('/api/usuarios', db_usuarios.deleta);
 
 
 
