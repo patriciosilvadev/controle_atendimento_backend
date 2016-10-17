@@ -1,35 +1,16 @@
-var promise = require('bluebird');
-
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var connectionString = {
-    //host: '192.168.0.50',
-    host:process.env.db_url,
-    port: 5432,
-    database: 'atendimento_db',
-    user: 'redhat',
-    password: 'redhat'
-};
-var db = pgp(connectionString);
+var db = require('../database/postgresqlDB');
 
 // add query functions
-function getTodosUsuarios(req, res, next) {
-  //res.header("Access-Control-Allow-Origin", "*");
-  //res.header("Access-Control-Allow-Headers", "X-Requested-With");
+function all(req, res, next) {
   console.log("get "+req.headers);
-  db.any('select * from usuario')
+  db.any('select * from cliente')
     .then(function (data) {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           data: data,
-          message: 'Retornou todos os usuarios!!!'
+          message: 'Retornou todos os clientes!!!'
         });
-     // next();
     })
     .catch(function (err) {
       console.log("error "+err);
@@ -105,9 +86,5 @@ function deleta(req, res, next) {
 
 
 module.exports = {
-  all: getTodosUsuarios,
-  fetch:getUsuarioPorUsername,
-  create:create, 
-  update:update,
-  deleta:deleta
+  all: all
 };

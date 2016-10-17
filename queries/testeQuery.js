@@ -1,55 +1,67 @@
-var promise = require('bluebird');
-
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var connectionString = {
-    //host: '192.168.0.50',
-    host:process.env.db_url,
-    port: 5432,
-    database: 'atendimento_db',
-    user: 'redhat',
-    password: 'redhat'
-};
-var db = pgp(connectionString);
+var db = require('../database/postgresqlDB');
 
 
-//insert usuarios
 function create(req, res, next) {
-  db.none('insert into sobrenome(sobrenome)' +
-      'values("teste")')
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserio usuario com sucesso!!'
-        });
-    })
-    .catch(function (err) {
-       res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserio usuario com sucesso!!',
-          data:err
-        });
-      //return next(err);
-    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  db.oneOrNone("Select id from nome where nome=$1",['tchau'])
+  .then(function(data){
+       if(data==null){
+         db.none('insert into nome(nome)' +
+            'values($1)',['tchau'])
+          .then(function () {
+            insertSobrenome().then(function(){
+                    res.status(200)
+                    .json({
+                      status: 'success',
+                      message: 'Inserido com muito sucesso'
+                    });
+            }).catch(function(err){
+              res.status(200)
+                    .json({
+                      status: 'success',
+                      message: 'Inserido com muito sucesso',
+                      data:err
+                    });
+            });
+          })
+       }else{
+              res.status(200)
+                    .json({
+                      status: 'success',
+                      message: 'else'
+                    });
+
+       }
+  }).catch(function(err){
+                  res.status(200)
+                    .json({
+                      status: 'success',
+                      message: 'catch',
+                      data:err
+                    });
+  });
 }
-
-
-//insert usuarios
-function getAll(req, res, next) {
-
-
-
-}
-
 
 
 module.exports = {
   create:create,
-  getAll:getAll
+  getAll:create
 }

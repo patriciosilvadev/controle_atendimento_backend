@@ -21,10 +21,6 @@ router.delete('/api/usuarios', db_usuarios.deleta);
 
 
 
-
-
-
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });

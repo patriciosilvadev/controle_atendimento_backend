@@ -6,7 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var usuarioRouter = require('./routes/usuarioRouter');
+var clienteRouter = require('./routes/clienteRouter');
 var testeRouter = require('./routes/testeRouter');
+var atendimentoRounter = require('./routes/atendimentoRouter');
 var users = require('./routes/users');
 
 var app = express();
@@ -23,13 +25,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/',testeRouter);
+app.use('/',clienteRouter);
 app.use('/', usuarioRouter);
+app.use('/', testeRouter);
+app.use('/',atendimentoRounter);
 app.use('/users', users);
 
-app.listen(4000, function () {
-  console.log('Example app listening on port 3000!');
-});
+//app.listen(4000, function () {
+//  console.log('Example app listening on port 3000!');
+//});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
