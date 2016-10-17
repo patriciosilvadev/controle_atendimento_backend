@@ -16,9 +16,8 @@ router.all("*",function(req, res, next) {
 router.get('/api/usuarios', db_usuarios.all);
 router.get('/api/usuarios/:username', db_usuarios.fetch);
 router.post('/api/usuarios', db_usuarios.create);
-router.put('/api/usuarios', db_usuarios.update);
-router.delete('/api/usuarios', db_usuarios.deleta);
-
+router.put('/api/usuarios/:usuario_id', db_usuarios.update);
+router.delete('/api/usuarios/:usuario_id', db_usuarios.deleta);
 
 
 /* GET home page. */

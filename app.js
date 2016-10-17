@@ -10,6 +10,7 @@ var clienteRouter = require('./routes/clienteRouter');
 var testeRouter = require('./routes/testeRouter');
 var atendimentoRounter = require('./routes/atendimentoRouter');
 var users = require('./routes/users');
+var errorHandlingRouter = require('./routes/errorHandlingRouter');
 
 var app = express();
 
@@ -29,11 +30,12 @@ app.use('/',clienteRouter);
 app.use('/', usuarioRouter);
 app.use('/', testeRouter);
 app.use('/',atendimentoRounter);
+app.use(errorHandlingRouter);
 app.use('/users', users);
 
-//app.listen(4000, function () {
-//  console.log('Example app listening on port 3000!');
-//});
+app.listen(4000, function () {
+  console.log('Example app listening on port 3000!');
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -45,7 +47,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+/*if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
@@ -64,6 +66,10 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+*/
+
+
+
 
 
 module.exports = app;

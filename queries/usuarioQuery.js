@@ -9,7 +9,7 @@ function getTodosUsuarios(req, res, next) {
     .then(function (data) {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           data: data,
           message: 'Retornou todos os usuarios!!!'
         });
@@ -27,7 +27,7 @@ function getUsuarioPorUsername(req, res, next) {
     .then(function (data) {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           data: data,
           message: 'Achou username '+username
         });
@@ -44,7 +44,7 @@ function create(req, res, next) {
     .then(function () {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           message: 'Inserio usuario com sucesso!!'
         });
     })
@@ -53,9 +53,8 @@ function create(req, res, next) {
     });
 }
 function update(req, res, next) {
-  /*db.none('update usuario set nome=$1, email=$2, username=$3, password=$4, tipo=$5 where id=$6',
-    [req.body.name, req.body.breed, parseInt(req.body.age),
-      req.body.sex, parseInt(req.params.id)])*/
+    var usuario_id = parseInt(req.params.usuario_id);
+    req.body.usuario_id=usuario_id;
     db.none('update usuario set nome=${nome}, email=${email}, username=${username}, password=${password}, tipo=${tipo} where id=${usuario_id}',
     req.body)
     .then(function () {
@@ -77,7 +76,7 @@ function deleta(req, res, next) {
       /* jshint ignore:start */
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           message: `Removed ${result.rowCount} puppy`
         });
       /* jshint ignore:end */
