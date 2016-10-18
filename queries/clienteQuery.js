@@ -1,6 +1,7 @@
 var db = require('../database/postgresqlDB');
-
-// add query functions
+/**
+ * Pega todos os cliente
+ */
 function all(req, res, next) {
   console.log("get "+req.headers);
   db.any('select * from cliente')
@@ -17,8 +18,26 @@ function all(req, res, next) {
       return next(err);
     });
 }
-//get usuario por username
-function getUsuarioPorUsername(req, res, next) {
+/**
+ * Faz o fetch to cliente pelo CNPJ
+ */
+function fetchCNPJ(req, res, next) {
+  var username = req.params.username;
+  db.one('select * from usuario where username= $1', username)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Achou username '+username
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function fetchNOME(req, res, next) {
   var username = req.params.username;
   db.one('select * from usuario where username= $1', username)
     .then(function (data) {
@@ -35,13 +54,13 @@ function getUsuarioPorUsername(req, res, next) {
 }
 //insert usuarios
 function create(req, res, next) {
-  db.none('insert into usuario(nome, email, username, password, tipo)' +
-      'values(${nome}, ${email}, ${username}, ${password},${tipo})',
+  db.none('insert into cliente(nome, cnpj)' +
+      'values(${nome}, ${cnpj}',
     req.body)
     .then(function () {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           message: 'Inserio usuario com sucesso!!'
         });
     })
@@ -86,5 +105,10 @@ function deleta(req, res, next) {
 
 
 module.exports = {
-  all: all
+  all: all,
+  update:update,
+  deleta:deleta,
+  fetchCNPJ:fetchCNPJ,
+  fetchNOME:fetchNOME,
+  create:create
 };
