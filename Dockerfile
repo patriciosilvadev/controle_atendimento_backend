@@ -5,8 +5,8 @@ FROM hypriot/rpi-node:0.12.0
 ADD / /src
 WORKDIR /src
 
-# install the dependencies from the package.json file
-RUN npm install
+# install the production dependencies from the package.json file
+RUN npm install --only=production
 
 # make port 80 available outside of the image
 EXPOSE 4000
