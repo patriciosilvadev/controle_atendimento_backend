@@ -13,6 +13,7 @@ var users = require('./routes/users');
 var errorHandlingRouter = require('./routes/errorHandlingRouter');
 
 var app = express();
+var port = process.env.PORT || 4000;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,8 +34,8 @@ app.use('/',atendimentoRounter);
 app.use(errorHandlingRouter);
 app.use('/users', users);
 
-app.listen(4000, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(port, function () {
+  console.log('App rodando na porta: '+port);
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

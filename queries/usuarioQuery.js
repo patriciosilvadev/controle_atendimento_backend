@@ -55,12 +55,12 @@ function create(req, res, next) {
 function update(req, res, next) {
     var usuario_id = parseInt(req.params.usuario_id);
     req.body.usuario_id=usuario_id;
-    db.none('update usuario set nome=${nome}, email=${email}, username=${username}, password=${password}, tipo=${tipo} where id=${usuario_id}',
+    db.none('update usuario set nome=${nome}, email=${email}, username=${username}, password=${password}, tipo=${tipo} where usuario_id=${usuario_id}',
     req.body)
     .then(function () {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           message: 'Atualizado com sucesso'
         });
     })

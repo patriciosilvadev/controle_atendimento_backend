@@ -22,8 +22,9 @@ if(process.env.NODE_ENV=='dev'){
         // save the screen messages into your own log file;
     };
 }
+console.log(process.env.db_url);
 var connectionString = {
-    host:process.env.db_url | 'localhost',
+    host:process.env.db_url || '192.168.0.50',
     port: 5432,
     database: 'atendimento_db',
     user: 'redhat',
