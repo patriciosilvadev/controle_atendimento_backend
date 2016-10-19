@@ -8,11 +8,10 @@ var db_clientes = require('../queries/clienteQuery');
 //usuarios routers
 router.get('/api/clientes', db_clientes.all);
 router.post('/api/clientes', db_clientes.create);
-router.get('/api/usuarios/cnpj/:cnpj', db_usuarios.fetchCNPJ);
-router.get('/api/usuarios/nome/:nome', db_usuarios.fetchNOME);
-//router.post('/api/usuarios', db_usuarios.create);
-//router.put('/api/usuarios', db_usuarios.update);
-//router.delete('/api/usuarios', db_usuarios.deleta);
+router.get('/api/clientes/cnpj/:cnpj', db_clientes.fetchCNPJ);
+router.get('/api/clientes/nome/:nome', db_clientes.fetchNOME);
+router.put('/api/clientes/:cnpj', db_clientes.update);
+router.delete('/api/clientes/:cnpj', db_clientes.deleta);
 
 
 module.exports = router;

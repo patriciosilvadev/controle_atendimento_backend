@@ -9,9 +9,12 @@ var should = chai.should();
 
 chai.use(chaiHttp);
 describe('Teste do endpoint cliente', () => {
-beforeEach((done) => { //Before each test we empty the database
+    beforeEach((done) => { //Before each test we empty the database
            done();             
     });
+    /**
+     * Post Method para a rota do Cliente
+     */
     describe('/Post cliente', () => {
       it('Nao deve funcionar', (done) => {
       var cliente={
@@ -49,24 +52,43 @@ beforeEach((done) => { //Before each test we empty the database
       });
     });
   /*
-  * Test the /GET/:username route
+  * Test the /GET/:nome route
   */
-  describe('/GET/:cnpj cliente', () => {
+  describe('/GET/:nome cliente', () => {
       it('deve pegar o cliente pelo cnpj', (done) => {
-      var cliente={
-            'nome': 'TESTE EMPRESA', 
-            'cnpj': '95284516000111'
+        var cliente={
+            nome: 'TESTE EMPRESA', 
+            cnpj : '95284516000111'
         };
         chai.request(server)
-        .get('/api/clientes/'+ cliente.username)
+        .get('/api/clientes/nome/'+ cliente.nome)
         .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
             res.body.data.should.have.property('nome');
-            res.body.data.should.have.property('email');
-            res.body.data.should.have.property('password');
-            res.body.data.should.have.property('tipo');
-            res.body.data.should.have.property('username').eql(cliente.username);
+            res.body.data.should.have.property('cnpj');
+            res.body.data.should.have.property('nome').eql(cliente.nome);
+            done();
+        });
+
+      });
+  });
+  /*
+  * Test the /GET/:cnpj route
+  */
+  describe('/GET/:cnpj cliente', () => {
+      it('Deve pegar o cliente pelo cnpj', (done) => {
+        var cliente={
+            nome: 'TESTE EMPRESA', 
+            cnpj : '95284516000111'
+        };
+        chai.request(server)
+        .get('/api/clientes/cnpj/'+ cliente.cnpj)
+        .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.data.should.have.property('nome');
+            res.body.data.should.have.property('cnpj').eql(cliente.cnpj);
             done();
         });
 
@@ -76,25 +98,21 @@ beforeEach((done) => { //Before each test we empty the database
   * Put cliente
   */
   describe('/Put cliente', () => {
-    var cliente={
-        'nome': 'TESTE EMPRESA', 
-        'cnpj': '95284516000111'
+        var cliente={
+            nome: 'TESTE EMPRESA Atualizado', 
+            cnpj : '95284516000111'
         };
     it('deve atualizar cliente', (done) => {    
-            chai.request(server)
-            .get('/api/clientes/'+ cliente.username)
-            .end((err, res) => {
-                chai.request(server)
-                .put('/api/clientes/'+ res.body.data.cliente_id)
-            .send(cliente)
-            .end((error, response) => {
-                response.should.have.status(200);
-                response.body.should.be.a('object');
-                response.body.should.have.property('status');
-                response.body.status.should.be.a('boolean');
-                response.body.status.should.equal(true);
-                done();
-            });
+        chai.request(server)
+            .put('/api/clientes/'+ cliente.cnpj)
+        .send(cliente)
+        .end((error, response) => {
+            response.should.have.status(200);
+            response.body.should.be.a('object');
+            response.body.should.have.property('status');
+            response.body.status.should.be.a('boolean');
+            response.body.status.should.equal(true);
+            done();
         });
     });
   });
@@ -123,28 +141,21 @@ beforeEach((done) => { //Before each test we empty the database
    * Delete cliente
    */
   describe('/Delete cliente', () => {
-    var cliente={
-        'nome': 'vitor2', 
-        'email': 'vlima2@redhat.com',
-        'username':'vitor2',
-        'password':'teste2',
-        'tipo':'administrador'
+        var cliente={
+            nome: 'TESTE EMPRESA', 
+            cnpj : '95284516000111'
         };
         it('deve deletar cliente', (done) => {    
-                 chai.request(server)
-                .get('/api/clientes/'+ cliente.username)
-                .end((err, res) => {
-                    chai.request(server)
-                    .delete('/api/clientes/'+ res.body.data.cliente_id)
-                    .end((error, response) => {
-                        response.should.have.status(200);
-                        response.body.should.be.a('object');
-                        response.body.should.have.property('status');
-                        response.body.status.should.be.a('boolean');
-                        response.body.status.should.equal(true);
-                        done();
-                     });
-                });
+            chai.request(server)
+            .delete('/api/clientes/'+ cliente.cnpj)
+            .end((error, response) => {
+                response.should.have.status(200);
+                response.body.should.be.a('object');
+                response.body.should.have.property('status');
+                response.body.status.should.be.a('boolean');
+                response.body.status.should.equal(true);
+                done();
             });
         });
+    });
 });

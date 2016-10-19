@@ -3,7 +3,6 @@ var db = require('../database/postgresqlDB');
  * Pega todos os cliente
  */
 function all(req, res, next) {
-  console.log("get "+req.headers);
   db.any('select * from cliente')
     .then(function (data) {
       res.status(200)
@@ -22,14 +21,14 @@ function all(req, res, next) {
  * Faz o fetch to cliente pelo CNPJ
  */
 function fetchCNPJ(req, res, next) {
-  var username = req.params.username;
-  db.one('select * from usuario where username= $1', username)
+  var cnpj = parseInt(req.params.cnpj);
+  db.one('select * from cliente where cnpj= $1', cnpj)
     .then(function (data) {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           data: data,
-          message: 'Achou username '+username
+          message: 'Achou cliente com cnpj'+cnpj
         });
     })
     .catch(function (err) {
@@ -38,14 +37,14 @@ function fetchCNPJ(req, res, next) {
 }
 
 function fetchNOME(req, res, next) {
-  var username = req.params.username;
-  db.one('select * from usuario where username= $1', username)
+  var nome = req.params.nome;
+  db.one('select * from cliente where nome= $1', nome)
     .then(function (data) {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           data: data,
-          message: 'Achou username '+username
+          message: 'Achou cliente com nome '+nome
         });
     })
     .catch(function (err) {
@@ -54,8 +53,9 @@ function fetchNOME(req, res, next) {
 }
 //insert usuarios
 function create(req, res, next) {
+  req.body.cnpj = parseInt(req.body.cnpj);
   db.none('insert into cliente(nome, cnpj)' +
-      'values(${nome}, ${cnpj}',
+      'values(${nome}, ${cnpj})',
     req.body)
     .then(function () {
       res.status(200)
@@ -69,15 +69,13 @@ function create(req, res, next) {
     });
 }
 function update(req, res, next) {
-  /*db.none('update usuario set nome=$1, email=$2, username=$3, password=$4, tipo=$5 where id=$6',
-    [req.body.name, req.body.breed, parseInt(req.body.age),
-      req.body.sex, parseInt(req.params.id)])*/
-    db.none('update usuario set nome=${nome}, email=${email}, username=${username}, password=${password}, tipo=${tipo} where id=${usuario_id}',
+    req.body.cnpj = parseInt(req.body.cnpj);
+    db.none('update cliente set nome=${nome} where cnpj=${cnpj}',
     req.body)
     .then(function () {
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           message: 'Atualizado com sucesso'
         });
     })
@@ -87,22 +85,19 @@ function update(req, res, next) {
 }
 
 function deleta(req, res, next) {
-  var usuario_id = parseInt(req.params.usuario_id);
-  db.result('delete from usuario where usuario_id = $1', usuario_id)
+  var cnpj = parseInt(req.params.cnpj);
+  db.result('delete from cliente where cnpj = $1', cnpj)
     .then(function (result) {
-      /* jshint ignore:start */
       res.status(200)
         .json({
-          status: 'success',
+          status: true,
           message: `Removed ${result.rowCount} puppy`
         });
-      /* jshint ignore:end */
     })
     .catch(function (err) {
       return next(err);
     });
 }
-
 
 module.exports = {
   all: all,

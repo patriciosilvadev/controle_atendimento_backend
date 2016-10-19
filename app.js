@@ -7,9 +7,7 @@ var bodyParser = require('body-parser');
 
 var usuarioRouter = require('./routes/usuarioRouter');
 var clienteRouter = require('./routes/clienteRouter');
-var testeRouter = require('./routes/testeRouter');
 var atendimentoRounter = require('./routes/atendimentoRouter');
-var users = require('./routes/users');
 var errorHandlingRouter = require('./routes/errorHandlingRouter');
 
 var app = express();
@@ -29,20 +27,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/',clienteRouter);
 app.use('/', usuarioRouter);
-app.use('/', testeRouter);
 app.use('/',atendimentoRounter);
 app.use(errorHandlingRouter);
-app.use('/users', users);
 
 app.listen(port, function () {
   console.log('App rodando na porta: '+port);
 });
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+/*app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
-});
+});*/
 
 // error handlers
 
