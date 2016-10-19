@@ -45,46 +45,9 @@ function create(req, res, next) {
     });
   });
 }
-
-
-/*function insert(req, res, next){
-  db.tx(function(t) {
-        return t.oneOrNone("Select id from nome where nome=$1","Mike")
-        .then(user=>{
-          console.log(user);
-          if(user==null){
-            return t.one('INSERT INTO nome(nome) VALUES($1) RETURNING id', ['Mike']);
-          }else{
-            return user;
-          }
-        })
-        .then(user=> {
-            return t.none('INSERT INTO sobrenome(nome_id, sobrenome) VALUES($1, $2)', [user.id, 'silva']);
-        });
-    })
-    .then(function(data) {
-        // data = as returned from the transaction's callback
-        console.log(data);
-        res.status(200)
-        .json({
-          status: true,
-          data:data,
-          message: 'Atualizado com sucesso'
-        });
-    })
-    .catch(function(error) {
-        // error
-        console.log(error);
-        res.status(200)
-        .json({
-          status: false,
-          err:err,
-          message: 'Atualizado com sucesso'
-        });
-    });
-}*/
-
-
+/**
+ * Insere na tabela atendimento
+ */
 function insert(req, res, next){
   db.tx(function(t) {
         return t.oneOrNone("Select cnpj from cliente where nome=${nome}",req.body)
@@ -98,11 +61,13 @@ function insert(req, res, next){
           }
         })
         .then(()=> {
-            return t.none('INSERT INTO atendimento(atendimento_id, data_inicio,'
-            +'data_fim, contato, tipo_acesso, chamado, problema, solucao, '
+           req.body.data_inicio= new Date();
+           console.log(new Date());
+            return t.none('INSERT INTO atendimento(data_inicio,'
+            +'contato, tipo_acesso, chamado, problema, solucao, '
             +'tipo_atendimento_id, usuario_id, cliente_id, aberto) '
-            +'VALUES(${atendimento_id}, ${data_inicio},${data_fim},'
-            +'${data_fim},${contato},${tipo_acesso},${chamado},${problema},'
+            +'VALUES(${data_inicio},'
+            +'${contato},${tipo_acesso},${chamado},${problema},'
             +'${solucao},(select tipo_atendimento_id from tipo_atendimento where descricao=${tipo_atendimento}),'
             +'(select usuario_id from usuario where username=${username}),'
             +'${cnpj},${aberto})', req.body);
@@ -120,13 +85,7 @@ function insert(req, res, next){
     })
     .catch(function(error) {
         // error
-        console.log(error);
-        res.status(200)
-        .json({
-          status: false,
-          err:err,
-          message: 'Atualizado com sucesso'
-        });
+        next(error);
     });
 }
 
