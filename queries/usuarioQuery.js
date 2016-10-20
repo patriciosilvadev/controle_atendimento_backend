@@ -85,12 +85,28 @@ function deleta(req, res, next) {
       return next(err);
     });
 }
+/**
+ * Endpoint usado pelo servico da aplicacao
+ */
+function login(req,res,next){
+   db.one('select username, email,tipo, nome,usuario_id '
+   +'from usuario where username=${username} AND password=${password}',req.body)
+  .then(function (data) {
 
+    res.status(200)
+      .json(data);
+
+  })
+  .catch(function (err) {
+    return next(err);
+  });
+}
 
 module.exports = {
   all: getTodosUsuarios,
   fetch:getUsuarioPorUsername,
   create:create, 
   update:update,
-  deleta:deleta
+  deleta:deleta,
+  login:login
 };
