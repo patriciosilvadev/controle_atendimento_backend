@@ -1,5 +1,4 @@
 var db = require('../database/postgresqlDB');
-var Promise = require("bluebird");
 
 function getCnpjID(cnpj,nome){
   return new Promise(function(resolve, reject){
@@ -69,8 +68,8 @@ function insert(req, res, next){
             +'VALUES(${data_inicio},'
             +'${contato},${tipo_acesso},${chamado},${problema},'
             +'${solucao},(select tipo_atendimento_id from tipo_atendimento where descricao=${tipo_atendimento}),'
-            +'(select usuario_id from usuario where username=${username}),'
-            +'${cnpj},${aberto})', req.body);
+            +'${userId},'
+            +'${cnpj},false)', req.body);
         });
     })
     .then(function(data) {
