@@ -1,7 +1,11 @@
 var db = require('../database/postgresqlDB');
 
 function all(req, res, next){
-  db.any("SELECT * FROM ATENDIMENTO CROSS JOIN CLIENTE")
+  db.any("SELECT * FROM ATENDIMENTO "
+  +"CROSS JOIN CLIENTE, tipo_atendimento "+
+  "WHERE CLIENTE.CNPJ=ATENDIMENTO.cliente_id "
+  +"AND ATENDIMENTO.tipo_atendimento_id=tipo_atendimento.tipo_atendimento_id "
+  +"ORDER BY aberto DESC, data_inicio ASC")
   .then(function(data){
         res.status(200)
         .json(data);

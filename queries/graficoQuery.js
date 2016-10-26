@@ -4,7 +4,6 @@ var db = require('../database/postgresqlDB');
  * Insere na tabela atendimento
  */
 function all(req, res, next){
-     //    console.log(req.params);
     var retorno = {
     };
     db.tx(function(t) {   
@@ -23,11 +22,19 @@ function all(req, res, next){
             +"from atendimento  where extract(year from data_inicio)=${ano} "
             +"AND extract(MONTH from data_inicio)=${mes} "
             +"GROUP BY usuario_id  ORDER BY total DESC",req.params);
+        })
+        .then(data=>{
+            retorno.destaques=data;
+            return t.any("select count(*) as total, "
+            +"(select descricao from tipo_atendimento where tipo_atendimento.tipo_atendimento_id=atendimento.tipo_atendimento_id) "
+            +"from atendimento  where extract(year from data_inicio)=${ano} "
+            +"AND extract(MONTH from data_inicio)=${mes} "
+            +"GROUP BY descricao  ORDER BY total DESC",req.params);
         });
     })
     .then(function(data) {
-        retorno.destaques=data;
-        console.log(retorno);
+        retorno.porTipo=data;
+        console.log(data);
         res.status(200)
         .json(retorno);
     })
