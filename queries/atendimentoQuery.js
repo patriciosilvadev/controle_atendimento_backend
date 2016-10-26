@@ -1,48 +1,14 @@
 var db = require('../database/postgresqlDB');
 
-function getCnpjID(cnpj,nome){
-  return new Promise(function(resolve, reject){
-    db.oneOrNone("Select cnpj from cliente where nome=${nome}",{"nome":nome})
-    .then(function(data){
-      if(data==null){
-        return db.none("Insert into cliente(cnpj,nome) values (${cpnj},${nome})"
-        ,{
-          "nome":nome,
-          "cpnj":cnpj
-        })
-      }else{
-        resolve();
-      }
+function all(req, res, next){
+  db.any("SELECT * FROM ATENDIMENTO CROSS JOIN CLIENTE")
+  .then(function(data){
+        res.status(200)
+        .json(data);
     })
-    .then(function(){
-          console.log("inserido com sucesso!!!");
-          resolve();
-      })
-      .catch(function(err){
-       reject(err);
-      });
+    .catch(function(err){
+      next(err);
     });
-}
-
-function create(req, res, next) {
-  //var cnpj=parseInt(req.body.cnpj);
-  var cnpj=req.body.cnpj;
-  var nome=req.body.nome;
-  console.log(cnpj);
-  getCnpjID(cnpj,nome).then(function(){
-    res.status(200)
-    .json({
-      status: true,
-      message: 'Atualizado com sucesso'
-    });
-  })
-  .catch(function(err){
-    res.status(200)
-    .json({
-      status: false,
-      message: 'Atualizado com sucesso'
-    });
-  });
 }
 /**
  * Insere na tabela atendimento
@@ -94,14 +60,7 @@ function insert(req, res, next){
 
 
 
-
-
-
-
-
-
-
 module.exports = {
-  create:create,
+  all:all,
   insert:insert
 };
