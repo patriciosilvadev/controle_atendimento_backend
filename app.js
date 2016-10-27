@@ -16,7 +16,6 @@ var graficoRouter = require('./routes/graficoRouter');
 var middleware = require('./middleware/authentication');
 
 var app = express();
-app.use(cors());
 var port = process.env.PORT || 4000;
 
 // view engine setup
@@ -25,12 +24,12 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 /**
  * Middleware router created to protect rest api with token 
@@ -81,9 +80,4 @@ app.use(function(err, req, res, next) {
   });
 });
 */
-
-
-
-
-
 module.exports = app;

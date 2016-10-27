@@ -94,13 +94,13 @@ function login(req,res,next){
    console.log(req.body);
    db.one('select username, email,tipo, nome,usuario_id '
    +'from usuario where username=${username} AND password=${password}',req.body)
-  .then(function (data) {
-    console.log(data);
-    data.token = jwt.sign(data, config.secret , {
+  .then(function (user) {
+    console.log(user);
+    user.token = jwt.sign(user, config.secret , {
         expiresIn : 60*60*24 // expires in 24 hours
     });
     res.status(200)
-      .json(data);
+      .json(user);
   })
   .catch(function (err) {
       res.status(403).json(err);

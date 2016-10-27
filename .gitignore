@@ -1,3 +1,6 @@
 node_modules/
 bin/
 public/
+jsconfig.json
+typings.json
+typings/

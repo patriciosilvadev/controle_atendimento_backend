@@ -8,7 +8,6 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-console.log(process.env.NODE_ENV);
 if(process.env.NODE_ENV=='dev'){
     var monitor = require('pg-monitor');
 
@@ -22,7 +21,7 @@ if(process.env.NODE_ENV=='dev'){
         // save the screen messages into your own log file;
     };
 }
-console.log(process.env.db_url);
+
 var connectionString = {
     host:process.env.db_url || '191.182.25.177',
     port: 5432,
