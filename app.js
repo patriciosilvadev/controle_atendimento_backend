@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var cors = require('cors')
+
 
 var usuarioRouter = require('./routes/usuarioRouter');
 var clienteRouter = require('./routes/clienteRouter');
@@ -11,8 +13,10 @@ var atendimentoRounter = require('./routes/atendimentoRouter');
 var errorHandlingRouter = require('./routes/errorHandlingRouter');
 var tipoAtendimentoRouter = require('./routes/tipoAtendimentoRouter');
 var graficoRouter = require('./routes/graficoRouter');
+var middleware = require('./middleware/authentication');
 
 var app = express();
+app.use(cors());
 var port = process.env.PORT || 4000;
 
 // view engine setup
@@ -27,6 +31,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+/**
+ * Middleware router created to protect rest api with token 
+ * based authentication
+ */
+app.use('/',middleware);
+/**
+ * Add other routers
+ */
 app.use('/',clienteRouter);
 app.use('/', usuarioRouter);
 app.use('/',atendimentoRounter);

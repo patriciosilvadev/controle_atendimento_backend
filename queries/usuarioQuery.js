@@ -1,4 +1,6 @@
 var db = require('../database/postgresqlDB');
+var config = require('../config'); 
+var jwt    = require('jsonwebtoken');
 
 // add query functions
 function getTodosUsuarios(req, res, next) {
@@ -89,16 +91,19 @@ function deleta(req, res, next) {
  * Endpoint usado pelo servico da aplicacao
  */
 function login(req,res,next){
+   console.log(req.body);
    db.one('select username, email,tipo, nome,usuario_id '
    +'from usuario where username=${username} AND password=${password}',req.body)
   .then(function (data) {
-
+    console.log(data);
+    data.token = jwt.sign(data, config.secret , {
+        expiresIn : 60*60*24 // expires in 24 hours
+    });
     res.status(200)
       .json(data);
-
   })
   .catch(function (err) {
-    return next(err);
+      res.status(403).json(err);
   });
 }
 
