@@ -12,9 +12,4 @@ router.put('/api/usuarios/:usuario_id', db_usuarios.update);
 router.delete('/api/usuarios/:usuario_id', db_usuarios.deleta);
 router.post('/login', db_usuarios.login);
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
 module.exports = router;

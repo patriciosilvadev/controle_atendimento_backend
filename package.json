@@ -18,7 +18,8 @@
     "morgan": "~1.7.0",
     "pg-monitor": "^0.5.11",
     "pg-promise": "^5.3.4",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "socket.io": "^1.5.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
