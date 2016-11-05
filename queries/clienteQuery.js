@@ -25,11 +25,8 @@ function fetchCNPJ(req, res, next) {
   db.one('select * from cliente where cnpj= $1', cnpj)
     .then(function (data) {
       res.status(200)
-        .json({
-          status: true,
-          data: data,
-          message: 'Achou cliente com cnpj'+cnpj
-        });
+        .json(
+          data);
     })
     .catch(function (err) {
       return next(err);
