@@ -24,15 +24,13 @@ function getTodosUsuarios(req, res, next) {
 }
 //get usuario por username
 function getUsuarioPorUsername(req, res, next) {
-  var username = req.params.username;
-  db.one('select * from usuario where username= $1', username)
+  var usuario_id = parseInt(req.params.usuario_id);
+  db.one('select * from usuario where usuario_id= $1', usuario_id)
     .then(function (data) {
       res.status(200)
-        .json({
-          status: true,
-          data: data,
-          message: 'Achou username '+username
-        });
+        .json(
+          data
+        );
     })
     .catch(function (err) {
       return next(err);

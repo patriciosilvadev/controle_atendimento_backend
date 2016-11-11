@@ -22,7 +22,7 @@ function all(req, res, next) {
  */
 function fetchCNPJ(req, res, next) {
   var cnpj = parseInt(req.params.cnpj);
-  db.one('select * from cliente where cnpj= $1', cnpj)
+  db.oneOrNone('select * from cliente where cnpj= $1', cnpj)
     .then(function (data) {
       res.status(200)
         .json(

@@ -23,7 +23,7 @@ router.use('/api', function(req, res, next) {
     jwt.verify(token, config.secret, function(err, decoded) {      
       if (err) {
           console.log(err);
-        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+        return res.status(401).json({ success: false, message: 'Failed to authenticate token.' });    
       } else {
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;    

@@ -6,7 +6,7 @@ var db_usuarios = require('../queries/usuarioQuery');
 
 //usuarios routers
 router.get('/api/usuarios', db_usuarios.all);
-router.get('/api/usuarios/:username', db_usuarios.fetch);
+router.get('/api/usuarios/:usuario_id', db_usuarios.fetch);
 router.post('/api/usuarios', db_usuarios.create);
 router.put('/api/usuarios/:usuario_id', db_usuarios.update);
 router.delete('/api/usuarios/:usuario_id', db_usuarios.deleta);
