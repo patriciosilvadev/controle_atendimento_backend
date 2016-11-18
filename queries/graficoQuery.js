@@ -35,7 +35,7 @@ function all(req, res, next){
             +"from atendimento  where extract(year from data_inicio)=${ano} "
             +"AND extract(MONTH from data_inicio)=${mes} "
             +"AND extract(WEEK from data_inicio)= extract(WEEK from to_date(${date}, 'YYYY-MM-DD'))",req.params);
-        })
+         })
         .then(data=>{
             retorno.total_semana=parseInt(data.total_semana);
             return t.oneOrNone("select count(*) as total_visitas from atendimento "

@@ -21,6 +21,7 @@ var atendimentoRounter = require('./routes/atendimentoRouter');
 var errorHandlingRouter = require('./routes/errorHandlingRouter');
 var tipoAtendimentoRouter = require('./routes/tipoAtendimentoRouter');
 var graficoRouter = require('./routes/graficoRouter');
+var graficoFaturamentoRouter = require('./routes/graficoFaturamentoRouter');
 var faturamentoRouter = require('./routes/faturamentoRouter');
 var middleware = require('./middleware/authentication');
 var socketChart = require("./websocket/graficos")(io);
@@ -43,6 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  * based authentication
  */
 app.use('/',middleware);
+
 /**
  * Add other routers
  */
@@ -51,6 +53,7 @@ app.use('/', usuarioRouter);
 app.use('/',atendimentoRounter);
 app.use('/',tipoAtendimentoRouter);
 app.use('/',graficoRouter);
+app.use('/',graficoFaturamentoRouter);
 app.use('/',faturamentoRouter);
 app.use(errorHandlingRouter);
 

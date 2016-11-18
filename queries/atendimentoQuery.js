@@ -50,13 +50,13 @@ function insert(req, res, next){
 				+'${cnpj},true) RETURNING atendimento_id', req.body);
 		})
 		.then(atendimento=>{
-
+			req.body.data=new Date();
 			if(req.body.tipo_atendimento==="Avulso Online" ||
 			req.body.tipo_atendimento==="Avulso Local"){
 				req.body.atendimento_id=atendimento.atendimento_id;
 				return t.none("INSERT INTO atendimento_valor "
-				+"(valor, aprovado, at_id, motivo)"
-				+" VALUES (${valor}, ${aprovado},${atendimento_id},${motivo})",req.body);
+				+"(valor, status, at_id, motivo, data)"
+				+" VALUES (${valor}, ${status},${atendimento_id},${motivo}, ${data})",req.body);
 			}
 			else{
 				return atendimento;
@@ -90,8 +90,22 @@ function update(req, res, next){
 			+"contato=${contato} where atendimento_id=${atendimento_id}",req.body)
 		.then(()=>{
 			if(req.body.tipo_atendimento==="Avulso Online" || req.body.tipo_atendimento==="Avulso Local"){
-				return t.none("update atendimento_valor set valor=${valor} ,aprovado=${aprovado},"
-			+"motivo=${motivo} where at_id=${atendimento_id}",req.body)
+				return t.oneOrNone("select status from atendimento_valor "
+					+"inner join atendimento on "
+					+"atendimento_id=at_id AND "
+					+"atendimento_id=${atendimento_id}",req.body)
+			}else{
+				return {};
+			}
+
+		})
+		.then(data=>{
+			if(data.status!==undefined){
+				if(data.status!==req.body.status){
+					req.body.data = new Date();
+				}
+				return t.none("update atendimento_valor set valor=${valor} ,status=${status},"
+					   +"motivo=${motivo} ,data=${data} where at_id=${atendimento_id}",req.body)
 			}else{
 				return {};
 			}
@@ -122,8 +136,22 @@ function finalizar(req, res, next){
 			+"contato=${contato} where atendimento_id=${atendimento_id}",req.body)
 		.then(()=>{
 			if(req.body.tipo_atendimento==="Avulso Online" || req.body.tipo_atendimento==="Avulso Local"){
-				return t.none("update atendimento_valor set valor=${valor} ,aprovado=${aprovado},"
-			+"motivo=${motivo} where atendimento_id=${atendimento_id}",req.body)
+				return t.oneOrNone("select status from atendimento_valor "
+					+"inner join atendimento on "
+					+"atendimento_id=at_id AND "
+					+"atendimento_id=${atendimento_id}",req.body)
+			}else{
+				return {};
+			}
+
+		})
+		.then(data=>{
+			if(data.status!==undefined){
+				if(data.status!==req.body.status){
+					req.body.data = new Date();
+				}
+				return t.none("update atendimento_valor set valor=${valor} ,status=${status},"
+					   +"motivo=${motivo} ,data=${data} where at_id=${atendimento_id}",req.body)
 			}else{
 				return {};
 			}
