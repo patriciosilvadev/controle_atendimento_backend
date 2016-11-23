@@ -10,22 +10,29 @@ function all(req, res, next){
     var mes=parseInt(req.params.mes);
     var dia=parseInt(req.params.dia);
     var ano=parseInt(req.params.ano);
+    var mes2=parseInt(req.params.mes2);
+    var dia2=parseInt(req.params.dia2);
+    var ano2=parseInt(req.params.ano2);
 
     req.params.date= (ano+"-"+mes+"-"+dia);
+    req.params.date2= (ano2+"-"+mes2+"-"+dia2);
     db.tx(function(t) {   
         return t.oneOrNone("select sum(valor) as total_ano from atendimento "
                           +"inner  join atendimento_valor on "
                           +"atendimento.atendimento_id=atendimento_valor.at_id AND "
                           +"atendimento_valor.status='faturado' AND "
-                          +"extract(year from data)=${ano}",req.params)
+                          +"extract(year from data_inicio)>=${ano} AND "
+                          +"extract(year from data_inicio)<=${ano2}",req.params)
         .then(data=>{
             retorno.total_ano=parseFloat(data.total_ano);
             return t.oneOrNone("select sum(valor) as total_mes from atendimento "
                         +"inner  join atendimento_valor on "
                         +"atendimento.atendimento_id=atendimento_valor.at_id AND "
                         +"atendimento_valor.status='faturado' AND "
-                        +"extract(year from data)=${ano} AND "
-                        +"extract(MONTH from data)=${mes}",req.params);
+                        +"extract(year from data_inicio)>=${ano} AND "
+                          +"extract(year from data_inicio)<=${ano2} AND "
+                          +"extract(MONTH from data_inicio)>=${mes} AND "
+                          +"extract(MONTH from data_inicio)<=${mes2}",req.params);
         })
         .then(data=>{
             retorno.total_mes=parseFloat(data.total_mes);
@@ -33,8 +40,10 @@ function all(req, res, next){
                         +"inner  join atendimento_valor on "
                         +"atendimento.atendimento_id=atendimento_valor.at_id AND "
                         +"atendimento_valor.status='não aprovado' AND "
-                        +"extract(year from data)=${ano} AND "
-                        +"extract(MONTH from data)=${mes}",req.params);
+                        +"extract(year from data_inicio)>=${ano} AND "
+                          +"extract(year from data_inicio)<=${ano2} AND "
+                          +"extract(MONTH from data_inicio)>=${mes} AND "
+                          +"extract(MONTH from data_inicio)<=${mes2}",req.params);
         })
         .then(data=>{
             retorno.nao_aprovados=parseFloat(data.nao_aprovados);
@@ -42,8 +51,10 @@ function all(req, res, next){
             +"inner  join atendimento_valor on "
             +"atendimento.atendimento_id=atendimento_valor.at_id AND "
             +"atendimento_valor.status='faturado' AND "
-            +"extract(year from data)=${ano} AND "
-            +"extract(MONTH from data)=${mes} "
+            +"extract(year from data_inicio)>=${ano} AND "
+            +"extract(year from data_inicio)<=${ano2} AND "
+            +"extract(MONTH from data_inicio)>=${mes} AND "
+            +"extract(MONTH from data_inicio)<=${mes2} "
             +"inner  join usuario on "
             +"atendimento.usuario_id=usuario.usuario_id "
             +"GROUP BY nome  ORDER BY total DESC",req.params);
@@ -54,9 +65,12 @@ function all(req, res, next){
                         +"inner  join atendimento_valor on "
                         +"atendimento.atendimento_id=atendimento_valor.at_id AND "
                         +"atendimento_valor.status='faturado' AND "
-                        +"extract(year from data)=${ano} AND "
-                        +"extract(MONTH from data)=${mes} AND "
-            +"extract(WEEK from data)= extract(WEEK from to_date(${date}, 'YYYY-MM-DD'))",req.params);
+                        +"extract(year from data_inicio)>=${ano} AND "
+            +"extract(year from data_inicio)<=${ano2} AND "
+            +"extract(MONTH from data_inicio)>=${mes} AND "
+            +"extract(MONTH from data_inicio)<=${mes2} AND "
+            +"extract(WEEK from data_inicio) >= extract(WEEK from to_date(${date}, 'YYYY-MM-DD')) AND "
+            +"extract(WEEK from data_inicio) <= extract(WEEK from to_date(${date2}, 'YYYY-MM-DD'))",req.params);
          })
         .then(data=>{
             retorno.total_semana=parseInt(data.total_semana);
@@ -65,8 +79,10 @@ function all(req, res, next){
             +"inner  join atendimento_valor on "
             +"atendimento.atendimento_id=atendimento_valor.at_id AND "
             +"atendimento_valor.status!='aprovado' AND "
-            +"extract(year from data)=${ano} AND "
-            +"extract(MONTH from data)=${mes} "
+            +"extract(year from data_inicio)>=${ano} AND "
+            +"extract(year from data_inicio)<=${ano2} AND "
+            +"extract(MONTH from data_inicio)>=${mes} AND "
+            +"extract(MONTH from data_inicio)<=${mes2} "
             +"GROUP BY descricao  ORDER BY total_tipo DESC",req.params);
         });
     })

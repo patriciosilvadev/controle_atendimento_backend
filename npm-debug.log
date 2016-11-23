@@ -10,7 +10,7 @@
 7 verbose unsafe-perm in lifecycle true
 8 info atendimentoBackend@0.0.0 Failed to exec start script
 9 verbose stack Error: atendimentoBackend@0.0.0 start: `export NODE_ENV='dev' && node app.js`
-9 verbose stack Exit status 1
+9 verbose stack Exit status 134
 9 verbose stack     at EventEmitter.<anonymous> (/home/vlima/opt/nodejs/lib/node_modules/npm/lib/utils/lifecycle.js:217:16)
 9 verbose stack     at emitTwo (events.js:87:13)
 9 verbose stack     at EventEmitter.emit (events.js:172:7)
@@ -21,13 +21,13 @@
 9 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
 10 verbose pkgid atendimentoBackend@0.0.0
 11 verbose cwd /home/vlima/Documents/development/nodejs/atendimentoBackend
-12 error Linux 4.7.7-200.fc24.x86_64
+12 error Linux 4.8.7-200.fc24.x86_64
 13 error argv "/home/vlima/opt/nodejs/bin/node" "/home/vlima/opt/nodejs/bin/npm" "start"
 14 error node v4.6.0
 15 error npm  v2.15.9
 16 error code ELIFECYCLE
 17 error atendimentoBackend@0.0.0 start: `export NODE_ENV='dev' && node app.js`
-17 error Exit status 1
+17 error Exit status 134
 18 error Failed at the atendimentoBackend@0.0.0 start script 'export NODE_ENV='dev' && node app.js'.
 18 error This is most likely a problem with the atendimentoBackend package,
 18 error not with npm itself.
