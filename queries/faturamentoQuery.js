@@ -24,102 +24,17 @@ function all(req, res, next){
 }
 
 /**
- * Insere na tabela atendimento
+ * Fatura Atendimento por ID
  */
-function insert(req, res, next){
-
+function faturar(req, res, next){
+	req.params.id=parseInt(req.params.id);
 	db.tx(function(t) {
-		return t.oneOrNone("Select cnpj from cliente where nome=${nome}",req.body)
-		.then(cliente=>{
-				if(cliente==null){
-					return t.one('INSERT INTO cliente(cnpj,nome)'
-							+'VALUES(${cnpj},${nome}) RETURNING cnpj', req.body);
-				}else{
-					return cliente;
-				}
-			})
-		.then(()=> {
-			req.body.data_inicio= new Date();
-			return t.one('INSERT INTO atendimento(data_inicio,'
-				+'contato, tipo_acesso, chamado, problema, solucao, '
-				+'tipo_atendimento_id, usuario_id, cliente_id, aberto) '
-				+'VALUES(${data_inicio},'
-				+'${contato},${tipo_acesso},${chamado},${problema},'
-				+'${solucao},(select tipo_atendimento_id from tipo_atendimento where descricao=${tipo_atendimento}),'
-				+'${userId},'
-				+'${cnpj},true) RETURNING atendimento_id', req.body);
-		})
-		.then(atendimento=>{
-
-			if(req.body.tipo_atendimento==="Avulso Online" ||
-			req.body.tipo_atendimento==="Avulso Local"){
-				req.body.atendimento_id=atendimento.atendimento_id;
-				return t.none("INSERT INTO atendimento_valor "
-				+"(valor, aprovado, faturado, at_id)"
-				+" VALUES (${valor}, ${aprovado}, false,${atendimento_id})",req.body);
-			}
-			else{
-				return atendimento;
-			}
-		});
+		return t.none("update atendimento_valor set status='faturado' where at_id=${id}",req.params)
 	})
 	.then(function(data) {
-		// data = as returned from the transaction's callback
-		console.log(data);
 		res.status(200)
 		.json({
 			status: true,
-			data:data,
-			message: 'Atualizado com sucesso'
-		});
-	})
-	.catch(function(error) {
-		// error
-		next(error);
-	});
-
-}
-
-/**
- * Insere na tabela atendimento
- */
-
-function update(req, res, next){
-
-	db.tx(function(t) {
-		return t.none("update atendimento set cnpj from cliente where nome=${nome}",req.body)
-		.then(()=> {
-			req.body.data_inicio= new Date();
-			return t.one('INSERT INTO atendimento(data_inicio,'
-				+'contato, tipo_acesso, chamado, problema, solucao, '
-				+'tipo_atendimento_id, usuario_id, cliente_id, aberto) '
-				+'VALUES(${data_inicio},'
-				+'${contato},${tipo_acesso},${chamado},${problema},'
-				+'${solucao},(select tipo_atendimento_id from tipo_atendimento where descricao=${tipo_atendimento}),'
-				+'${userId},'
-				+'${cnpj},true) RETURNING atendimento_id', req.body);
-		})
-		.then(atendimento=>{
-
-			if(req.body.tipo_atendimento==="Avulso Online" ||
-			req.body.tipo_atendimento==="Avulso Local"){
-				req.body.atendimento_id=atendimento.atendimento_id;
-				return t.none("INSERT INTO atendimento_valor "
-				+"(valor, aprovado, faturado, at_id)"
-				+" VALUES (${valor}, ${aprovado}, false,${atendimento_id})",req.body);
-			}
-			else{
-				return atendimento;
-			}
-		});
-	})
-	.then(function(data) {
-		// data = as returned from the transaction's callback
-		console.log(data);
-		res.status(200)
-		.json({
-			status: true,
-			data:data,
 			message: 'Atualizado com sucesso'
 		});
 	})
@@ -133,5 +48,5 @@ function update(req, res, next){
 
 module.exports = {
   all:all,
-  insert:insert
+  faturar:faturar
 };
