@@ -11,8 +11,10 @@ function all(req, res, next){
 		+"ATENDIMENTO.tipo_atendimento_id=tipo_atendimento.tipo_atendimento_id "
 		+"INNER JOIN ATENDIMENTO_VALOR ON ATENDIMENTO_VALOR.at_id=ATENDIMENTO.ATENDIMENTO_ID "
 		+"LEFT JOIN (SELECT username , usuario_id  FROM USUARIO) U ON "
-		+"ATENDIMENTO.usuario_id=U.usuario_id "
-		+"ORDER BY aberto DESC, data_inicio DESC")
+		+"ATENDIMENTO.usuario_id=U.usuario_id WHERE "
+		+"extract(year from data_inicio)=${ano} AND "
+		+"extract(MONTH from data_inicio)=${mes} "
+		+"ORDER BY aberto DESC, data_inicio DESC", req.params)
 	.then(function(data){
 		res.status(200)
 		.json(data);
@@ -28,8 +30,10 @@ function all(req, res, next){
  */
 function faturar(req, res, next){
 	req.params.id=parseInt(req.params.id);
+	req.params.data=new Date();
 	db.tx(function(t) {
-		return t.none("update atendimento_valor set status='faturado' where at_id=${id}",req.params)
+		return t.none("update atendimento_valor set status='faturado',"
+		+"data=${data} where at_id=${id}",req.params)
 	})
 	.then(function(data) {
 		res.status(200)
