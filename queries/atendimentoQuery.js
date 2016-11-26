@@ -23,6 +23,35 @@ function all(req, res, next){
 
 }
 
+function allByMonth(req, res, next){
+
+	var mes=parseInt(req.params.mes);
+    	var ano=parseInt(req.params.ano);
+
+	var usuario_id = parseInt(req.params.usuario_id);
+
+	db.any("SELECT * FROM ATENDIMENTO "
+		+"LEFT JOIN CLIENTE "+
+		"ON CLIENTE.CNPJ=ATENDIMENTO.cliente_id "
+		+"LEFT JOIN TIPO_ATENDIMENTO ON "
+		+"ATENDIMENTO.tipo_atendimento_id=tipo_atendimento.tipo_atendimento_id "
+		+"LEFT JOIN ATENDIMENTO_VALOR ON ATENDIMENTO_VALOR.at_id=ATENDIMENTO.ATENDIMENTO_ID "
+		+"LEFT JOIN (SELECT username , usuario_id  FROM USUARIO) U ON "
+		+"ATENDIMENTO.usuario_id=U.usuario_id WHERE "
+		+"extract(year from data_inicio)=${ano} AND "
+		+"extract(MONTH from data_inicio)=${mes} "
+		+"ORDER BY aberto DESC, data_inicio DESC", req.params)
+	.then(function(data){
+		res.status(200)
+		.json(data);
+	})
+	.catch(function(err){
+		next(err);
+	});
+
+}
+
+
 /**
  * Insere na tabela atendimento
  */
@@ -176,5 +205,6 @@ module.exports = {
   all:all,
   finalizar:finalizar,
   insert:insert,
-  update:update
+  update:update,
+  allByMonth:allByMonth
 };
