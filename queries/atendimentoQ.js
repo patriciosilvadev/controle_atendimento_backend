@@ -15,6 +15,31 @@ function all(req, res, next){
 
 }
 
+/*# GET #*/
+function allAnoMes(req, res, next){
+	var mes=parseInt(req.params.mes);
+    var ano=parseInt(req.params.ano);
+
+    var dtInicial= new Date(ano,mes,1);
+    var dtFinal= new Date(ano,dtInicial.getMonth()+1,0);;
+
+    var filter = {};
+    filter.include= [ valor ];
+    filter.where={
+        created_at:{
+            $gte: dtInicial,
+            $lte: dtFinal
+        }
+    };
+
+     atendimento.findAll(filter).then(function(atendimentos) {
+        res.json(atendimentos);
+     }).catch(function(err){
+		next(err);
+	});
+
+}
+
 /*# PUT #*/
 function update(req, res, next){
 
@@ -102,5 +127,6 @@ function insert(req, res, next){
 module.exports = {
     insert:insert,
     all:all,
-    update:update
+    update:update,
+    allAnoMes:allAnoMes
 };

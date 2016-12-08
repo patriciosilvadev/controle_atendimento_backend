@@ -1,23 +1,4 @@
 var sequelize = require('sequelize');
-var promise = require('bluebird');
-
-var options = {
-  promiseLib: promise
-};
-
-
-var monitor = require('pg-monitor');
-
-monitor.attach(options); // attach to all query events;
-// See API: https://github.com/vitaly-t/pg-monitor#attachoptions-events-override
-
-monitor.setTheme('matrix'); // change the default theme;
-// Other themes: https://github.com/vitaly-t/pg-monitor/wiki/Color-Themes
-
-monitor.log = function (msg, info) {
-    // save the screen messages into your own log file;
-};
-
 
 var config = {
   "username": "redhat",
