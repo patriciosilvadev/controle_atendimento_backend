@@ -1,5 +1,7 @@
 var Sequelize = require('sequelize');
 var db = require('../_db');
+var status = require('./status');
+
 
 var valor = db.define('valor', 
 {
@@ -17,15 +19,14 @@ var valor = db.define('valor',
     },
     faturado_at: {
         type: Sequelize.DATE,
-    },
-    status: {
-        type: Sequelize.INTEGER,
-        allowNull: false
     }
 },{
     "freezeTableName": true,
     "underscored":true,
     "timestamps": false
 });
+
+valor.belongsTo(status,{foreignKey: 'status_id',foreignKeyConstraint: true});
+
 
 module.exports = valor;

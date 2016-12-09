@@ -4,6 +4,8 @@ var db = require('../_db');
 var cliente = require('./cliente');
 var usuario = require('./usuario');
 var valor = require('./valor');
+var tipo_atendimento = require('./tipo_atendimento');
+var tipo_acesso = require('./tipo_acesso');
 
 var atendimento = db.define('atendimento', 
 {
@@ -33,14 +35,6 @@ var atendimento = db.define('atendimento',
     solucao: {
         type: Sequelize.TEXT,
     },
-    tipo_acesso: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
-    tipo_atendimento: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
     aberto: {
         type: Sequelize.BOOLEAN
     }
@@ -51,6 +45,8 @@ var atendimento = db.define('atendimento',
 });
 
 atendimento.belongsTo(cliente,{foreignKey: 'cliente_id',foreignKeyConstraint: true});
+atendimento.belongsTo(tipo_acesso,{foreignKey: 'tipo_acesso_id',foreignKeyConstraint: true});
+atendimento.belongsTo(tipo_atendimento,{foreignKey: 'tipo_atendimento_id',foreignKeyConstraint: true});
 atendimento.belongsTo(valor,{foreignKey: 'valor_id',foreignKeyConstraint: true});
 atendimento.belongsTo(usuario,{foreignKey: 'usuario_id',foreignKeyConstraint: true});
 

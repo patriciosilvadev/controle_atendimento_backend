@@ -23,6 +23,27 @@ moduleUsuario.findByID= function(req, res, next){
 
 }
 
+/*# Update Usuario #*/
+moduleUsuario.update= function(req, res, next){
+
+    usuario
+    .findOne({
+        where: {
+            id: req.params.id
+        }
+    })
+    .then(function(user) {
+        user.updateAttributes(
+            req.body
+        ).then(user=>{
+            res.json(user);
+        });
+     }).catch(function(err){
+		next(err);
+	});
+
+}
+
 /**
  * Endpoint usado pelo servico da aplicacao
  */

@@ -8,7 +8,7 @@ var db_usuarios = require('../queries/usuarioQuery');
 router.get('/api/usuarios', db_usuarios.all);
 router.get('/api/usuarios/:id', usuarioQ.findByID);
 router.post('/api/usuarios', db_usuarios.create);
-router.put('/api/usuarios/:usuario_id', db_usuarios.update);
+router.put('/api/usuarios/:id', usuarioQ.update);
 router.delete('/api/usuarios/:usuario_id', db_usuarios.deleta);
 router.post('/login', usuarioQ.login);
 
