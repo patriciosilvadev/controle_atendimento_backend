@@ -1,8 +1,9 @@
 var cliente = require('../database/models/cliente');
 var sequelize = require('sequelize');
 
+var moduleCliente = {};
 /*# GET #*/
-function all(req, res, next){
+moduleCliente.all=function(req, res, next){
 
      cliente.findAll().then(function(clientes) {
         res.json(clientes);
@@ -12,8 +13,25 @@ function all(req, res, next){
 
 }
 
+/*# GET #*/
+moduleCliente.findByID= function(req, res, next){
+
+    cliente
+    .findOne({
+        where: {
+            cnpj: req.params.cnpj
+        }
+    })
+    .then(function(cl) {
+        res.json(cl || {});
+     }).catch(function(err){
+		next(err);
+	});
+
+}
+
 /*# POST #*/
-function insert(req, res, next){
+moduleCliente.insert=function(req, res, next){
 
      cliente.create(req.body).then(function(cliente) {
         res.json(cliente);
@@ -24,7 +42,4 @@ function insert(req, res, next){
 }
 
 
-module.exports = {
-    insert:insert,
-    all:all
-};
+module.exports = moduleCliente;

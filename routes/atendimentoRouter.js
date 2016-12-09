@@ -4,7 +4,7 @@ var db_atendimento = require('../queries/atendimentoQuery');
 var atendimentoQ = require('../queries/atendimentoQ');
 
 
-router.post('/api/atendimentos', db_atendimento.insert);
+router.post('/api/atendimentos', atendimentoQ.insert);
 router.get('/api/atendimentos', db_atendimento.all);
 router.get('/api/atendimentos/:ano/:mes', atendimentoQ.allAnoMes);
 router.get('/api/atendimento/:ano/:mes', db_atendimento.allByMonth);

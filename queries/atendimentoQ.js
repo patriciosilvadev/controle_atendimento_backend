@@ -86,39 +86,44 @@ function update(req, res, next){
 function insert(req, res, next){
 
     db.transaction(function (t) { 
-        return cliente.find({
+        return cliente.findOne({
             where: {
-                cnpj: req.body.cnpj
+                cnpj: req.body.cliente.cnpj
             }
         }, {transaction: t})
         .then(c=>{
+            
             if(c!==null && c.cnpj != undefined ){
                 return c;
             }else{
-                return cliente.create(req.body,{transaction: t});
+                return cliente.create(req.body.cliente,{transaction: t});
             }
         })
         .then(c=>{
-            if(req.body.tipo==0){
-                return atendimento.create({
+            console.log(c);
+            var item = {
                     "contato": req.body.contato,
                     "chamado": req.body.chamado,
-                    "tipo": req.body.tipo,
+                    "tipo_acesso_id": req.body.tipo_acesso_id,
+                    "tipo_atendimento_id": req.body.tipo_atendimento_id,
                     "usuario_id": req.body.usuario_id,
-                    "cliente_id": c.cnpj,
+                    "cliente_id": req.body.cliente.cnpj,
                     "aberto": req.body.aberto,
                     "finalizado_at": req.body.finalizado_at,
                     "problema": req.body.problema,
                     "solucao": req.body.solucao,
-                    "valor": req.body.valor,
-                },
-                {
-                    include: [ valor ]
-                }
-                ,{transaction: t});
-            }else{
-                return atendimento.create(req.body,{transaction: t});
+            };
+            var options ={};
+            options.transaction= t;
+            console.log(req.body.tipo_atendimento);
+            if(req.body.tipo_atendimento.descricao.indexOf('AVULSO ONLINE')>=0 
+			  || req.body.tipo_atendimento.descricao.indexOf('AVULSO LOCAL' )>=0){
+
+                item.valor= req.body.valor;
+                options.include= [ valor ];
+            
             }
+            return atendimento.create(item,options);
         });
 
     }).then(function (result) {
