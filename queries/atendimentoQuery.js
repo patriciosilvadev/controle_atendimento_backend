@@ -30,17 +30,7 @@ function allByMonth(req, res, next){
 
 	var usuario_id = parseInt(req.params.usuario_id);
 
-	db.any("SELECT * FROM ATENDIMENTO "
-		+"LEFT JOIN CLIENTE "+
-		"ON CLIENTE.CNPJ=ATENDIMENTO.cliente_id "
-		+"LEFT JOIN TIPO_ATENDIMENTO ON "
-		+"ATENDIMENTO.tipo_atendimento_id=tipo_atendimento.tipo_atendimento_id "
-		+"LEFT JOIN ATENDIMENTO_VALOR ON ATENDIMENTO_VALOR.at_id=ATENDIMENTO.ATENDIMENTO_ID "
-		+"LEFT JOIN (SELECT username , usuario_id  FROM USUARIO) U ON "
-		+"ATENDIMENTO.usuario_id=U.usuario_id WHERE "
-		+"extract(year from data_inicio)=${ano} AND "
-		+"extract(MONTH from data_inicio)=${mes} "
-		+"ORDER BY aberto DESC, data_inicio DESC", req.params)
+	db.any('SELECT "atendimento"."id", "atendimento"."created_at", "atendimento"."updated_at", "atendimento"."finalizado_at", "atendimento"."contato", "atendimento"."chamado", "atendimento"."problema", "atendimento"."solucao", "atendimento"."tipo_acesso", "atendimento"."tipo_atendimento", "atendimento"."aberto", "atendimento"."cliente_id", "atendimento"."valor_id", "atendimento"."usuario_id", "valor"."id" AS "valor.id", "valor"."valor" AS "valor.valor", "valor"."motivo" AS "valor.motivo", "valor"."faturado_at" AS "valor.faturado_at", "valor"."status" AS "valor.status", "cliente"."cnpj" AS "cliente.cnpj", "cliente"."nome" AS "cliente.nome", "usuario"."id" AS "usuario.id", "usuario"."nome" AS "usuario.nome", "usuario"."email" AS "usuario.email", "usuario"."username" AS "usuario.username", "usuario"."password" AS "usuario.password", "usuario"."tipo" AS "usuario.tipo" FROM "atendimento" AS "atendimento" LEFT OUTER JOIN "valor" AS "valor" ON "atendimento"."valor_id" = "valor"."id" LEFT OUTER JOIN "cliente" AS "cliente" ON "atendimento"."cliente_id" = "cliente"."cnpj" LEFT OUTER JOIN "usuario" AS "usuario" ON "atendimento"."usuario_id" = "usuario"."id" WHERE ("atendimento"."created_at" >='+"'2016-12-01 02:00:00.000 +00:00'"+ ' AND "atendimento"."created_at" <='+ "'2016-12-31 02:00:00.000 +00:00'"+')', req.params)
 	.then(function(data){
 		res.status(200)
 		.json(data);

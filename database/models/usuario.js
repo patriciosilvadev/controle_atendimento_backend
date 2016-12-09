@@ -16,8 +16,12 @@ var usuario = db.define('usuario',
         type: Sequelize.STRING,
         allowNull: false
     },
+    username: {
+        type: Sequelize.CHAR(45),
+        allowNull: false
+    },
     password: {
-        type: Sequelize.CHAR(35),
+        type: Sequelize.CHAR(32),
         allowNull: false
     },
     tipo: {

@@ -3,6 +3,7 @@ var valor = require('../database/models/valor');
 var usuario = require('../database/models/usuario');
 var atendimento = require('../database/models/atendimento');
 var db = require('../database/_db');
+var dot = require('dot-object');
 
 /*# GET #*/
 function all(req, res, next){
@@ -24,7 +25,8 @@ function allAnoMes(req, res, next){
     var dtFinal= new Date(ano,dtInicial.getMonth()+1,0);;
 
     var filter = {};
-    filter.include= [ valor ];
+    filter.include= [ valor , cliente, usuario]
+    filter.raw= true;
     filter.where={
         created_at:{
             $gte: dtInicial,
@@ -32,11 +34,14 @@ function allAnoMes(req, res, next){
         }
     };
 
-     atendimento.findAll(filter).then(function(atendimentos) {
+    atendimento.findAll(filter).then(function(atendimentos) {
+        atendimentos.forEach(function(at) {
+            dot.object(at);
+        });
         res.json(atendimentos);
-     }).catch(function(err){
-		next(err);
-	});
+    }).catch(function(err){
+        next(err);
+    });
 
 }
 

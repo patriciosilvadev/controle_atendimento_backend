@@ -6,6 +6,10 @@ var config = {
   "database": "atendimento_db",
   "host": "127.0.0.1",
   "dialect": "postgres",
+  "pool": {
+    "max": 10,
+    "min": 5
+  },
   "freezeTableName": true,
   "underscored":true,
   "timestamps": false,

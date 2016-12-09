@@ -33,7 +33,11 @@ var atendimento = db.define('atendimento',
     solucao: {
         type: Sequelize.TEXT,
     },
-    tipo: {
+    tipo_acesso: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    tipo_atendimento: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
@@ -46,9 +50,9 @@ var atendimento = db.define('atendimento',
     "timestamps": true
 });
 
-atendimento.belongsTo(cliente,{foreignKey: 'cliente_id'});
-atendimento.belongsTo(valor,{foreignKey: 'valor_id'});
-atendimento.belongsTo(usuario,{foreignKey: 'usuario_id'});
+atendimento.belongsTo(cliente,{foreignKey: 'cliente_id',foreignKeyConstraint: true});
+atendimento.belongsTo(valor,{foreignKey: 'valor_id',foreignKeyConstraint: true});
+atendimento.belongsTo(usuario,{foreignKey: 'usuario_id',foreignKeyConstraint: true});
 
 
 module.exports = atendimento;
