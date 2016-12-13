@@ -2,6 +2,7 @@ var cliente = require('../database/models/cliente');
 var valor = require('../database/models/valor');
 var usuario = require('../database/models/usuario');
 var atendimento = require('../database/models/atendimento');
+var tipoAtendimento = require('../database/models/tipo_atendimento');
 var db = require('../database/_db');
 var dot = require('dot-object');
 
@@ -70,7 +71,14 @@ function update(req, res, next){
             }
         })
         .then(at=>{
-            return at.updateAttributes(req.body,{transaction: t});
+            if(req.body.aberto==false && at.aberto!==false){
+                var dateFinalizado = new Date();
+                req.body.aberto=false;
+                req.body.finalizado_at=dateFinalizado;
+            }else{
+                req.body.finalizado_at=at.finalizado_at;
+            }
+            return at.updateAttributes(req.body,{omitNull: true,transaction: t});
         });
 
     }).then(function (result) {
@@ -86,19 +94,13 @@ function update(req, res, next){
 function insert(req, res, next){
 
     db.transaction(function (t) { 
-        return cliente.findOne({
+
+        return cliente.findOrCreate({
             where: {
-                cnpj: req.body.cliente.cnpj
+                cnpj: req.body.cliente.cnpj,
+                nome: req.body.cliente.nome
             }
-        }, {transaction: t})
-        .then(c=>{
-            
-            if(c!==null && c.cnpj != undefined ){
-                return c;
-            }else{
-                return cliente.create(req.body.cliente,{transaction: t});
-            }
-        })
+        , transaction: t})
         .then(c=>{
             console.log(c);
             var item = {
@@ -112,20 +114,27 @@ function insert(req, res, next){
                     "finalizado_at": req.body.finalizado_at,
                     "problema": req.body.problema,
                     "solucao": req.body.solucao,
+                    aberto: true
             };
-            var options ={};
-            options.transaction= t;
-            console.log(req.body.tipo_atendimento);
-            if(req.body.tipo_atendimento.descricao.indexOf('AVULSO ONLINE')>=0 
-			  || req.body.tipo_atendimento.descricao.indexOf('AVULSO LOCAL' )>=0){
 
-                item.valor= req.body.valor;
-                options.include= [ valor ];
-            
+            if(req.body.finalizado!==undefined && req.body.finalizado){
+                var dateFinalizado = new Date();
+                item.aberto=false;
+                item.finalizado_at=dateFinalizado;
+            }else{
+                item.aberto=true;
             }
-            return atendimento.create(item,options);
+            return tipoAtendimento.findById(item.tipo_atendimento_id,{transaction:t}).then(data=>{
+                                console.log(data);
+                                var options ={};
+                                options.transaction= t;
+                                if(data.descricao=="AVULSO ONLINE" || data.descricao=="AVULSO LOCAL"){
+                                        item.valor= req.body.valor;
+                                        options.include= [ valor ];
+                                }
+                                return atendimento.create(item,options);
+                            });
         });
-
     }).then(function (result) {
         res.json(result);
     }).catch(function (err) {
@@ -134,10 +143,23 @@ function insert(req, res, next){
 
 }
 
+function getById(req, res, next){
+
+    atendimento
+    .findById(req.params.id)
+    .then(function(at) {
+        res.json(at || {});
+     }).catch(function(err){
+		next(err);
+	});
+
+}
+
 
 module.exports = {
     insert:insert,
     all:all,
+    getById:getById,
     update:update,
     allAnoMes:allAnoMes
 };

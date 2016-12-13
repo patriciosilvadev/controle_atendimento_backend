@@ -28,6 +28,7 @@ var atendimento = db.define('atendimento',
     },
     chamado: {
         type: Sequelize.BOOLEAN,
+        allowNull: false
     },
     problema: {
         type: Sequelize.TEXT,
@@ -36,7 +37,8 @@ var atendimento = db.define('atendimento',
         type: Sequelize.TEXT,
     },
     aberto: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false
     }
 },{
     "freezeTableName": true,

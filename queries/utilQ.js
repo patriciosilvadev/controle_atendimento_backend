@@ -1,29 +1,29 @@
-var db = require('../database/postgresqlDB');
 
-utilQ = {};
 
-utilQ.all =  function(req, res, next) {
+var utilModel = {};
 
-  db.tx(function(t) {   
-        return t.batch([
-            t.any("select * from tipo_acesso "),
-            t.any("select * from tipo_atendimento"),
-            t.any("select * from status")
-        ]);
-    })
-    .then(function(data) {
-        var retorno={};
-        retorno.tipo_acesso=data[0] || [];
-        retorno.tipo_atendimento=data[1] || [];
-        retorno.status=data[2] || [];
-        console.log(data);
-        res.status(200)
-        .json(retorno);
-    })
-    .catch(function(error) {
-        // error
-        next(error);
-    })
-}
+utilModel.getDates = function(ano,mes,dia){
+    
+    var returnDates= {};
 
-module.exports=utilQ;
+    //ano
+    returnDates.ano_inicio=new Date(ano,0,1)
+    returnDates.ano_fim=new Date(ano,0,0);
+
+    //mes
+    returnDates.mes_inicio=new Date(ano,mes,1)
+    returnDates.mes_fim=new Date(ano,mes+1,0);
+
+    //semana
+    var semana=new Date(ano,mes,dia);
+    returnDates.semana_inicio=new Date(ano,mes,semana.getDate()-semana.getDay());
+    returnDates.semana_fim=new Date(ano,mes+1,semana.getDate()+6);
+
+    return returnDates;
+
+};
+
+
+
+module.exports=utilModel;
+
