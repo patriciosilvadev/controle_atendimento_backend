@@ -46,23 +46,22 @@ function allAnoMes(req, res, next){
  * Fatura Atendimento por ID
  */
 function faturar(req, res, next){
-	/*req.params.id=parseInt(req.params.id);
-	req.params.data=new Date();
-	db.tx(function(t) {
-		return t.none("update atendimento_valor set status='faturado',"
-		+"data=${data} where at_id=${id}",req.params)
-	})
-	.then(function(data) {
-		res.status(200)
-		.json({
-			status: true,
-			message: 'Atualizado com sucesso'
-		});
+	var id=parseInt(req.params.id);
+	
+	valor.findById(id)
+	.then(function(instance) {
+		instance.updateAttributes({
+			status_id:req.body.status_id,
+            motivo:req.body.motivo,
+			faturado_at:new Date()
+		}).then(instance=>{
+            res.json(instance);
+        });
 	})
 	.catch(function(error) {
 		// error
 		next(error);
-	});*/
+	});
 
 }
 

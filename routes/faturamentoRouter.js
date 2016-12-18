@@ -7,6 +7,6 @@ var faturamentoQ = require('../queries/faturamentoQ');
 
 
 router.get('/api/faturamento/:ano/:mes', faturamentoQ.allAnoMes);
-router.put('/api/faturamento/:id/faturar', db_faturamento.faturar);
+router.put('/api/faturamento/:id', faturamentoQ.faturar);
 
 module.exports = router;
