@@ -9,7 +9,7 @@
 6 silly lifecycle atendimentoBackend@0.0.0~prestart: no script for prestart, continuing
 7 info lifecycle atendimentoBackend@0.0.0~start: atendimentoBackend@0.0.0
 8 verbose lifecycle atendimentoBackend@0.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle atendimentoBackend@0.0.0~start: PATH: /home/vlima/opt/nodejs/lib/node_modules/npm/bin/node-gyp-bin:/home/vlima/Documents/development/nodejs/controle_atendimento_backend/node_modules/.bin:/home/vlima/opt/jdk/bin:/home/vlima/opt/jdk/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/home/vlima/.local/bin:/home/vlima/bin:/home/vlima/opt/nodejs/bin:/home/vlima/opt/android-sdk-linux/bin:/home/vlima/opt/apache-maven-3.3.9/bin:/:/home/vlima/.local/bin:/home/vlima/bin:/home/vlima/opt/nodejs/bin:/home/vlima/opt/android-sdk-linux/bin:/home/vlima/opt/apache-maven-3.3.9/bin:/
+9 verbose lifecycle atendimentoBackend@0.0.0~start: PATH: /home/vlima/opt/nodejs/lib/node_modules/npm/bin/node-gyp-bin:/home/vlima/Documents/development/nodejs/controle_atendimento_backend/node_modules/.bin:/home/vlima/opt/jdk/bin:/usr/lib64/qt-3.3/bin:/opt/jdk1.8.0_101/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/home/vlima/.local/bin:/home/vlima/bin:/home/vlima/opt/nodejs/bin:/home/vlima/opt/android-sdk-linux/bin:/home/vlima/opt/apache-maven-3.3.9/bin:/
 10 verbose lifecycle atendimentoBackend@0.0.0~start: CWD: /home/vlima/Documents/development/nodejs/controle_atendimento_backend
 11 silly lifecycle atendimentoBackend@0.0.0~start: Args: [ '-c', 'export NODE_ENV=\'dev\' && node app.js' ]
 12 silly lifecycle atendimentoBackend@0.0.0~start: Returned: code: 1  signal: null

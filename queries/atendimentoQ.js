@@ -28,7 +28,7 @@ function allAnoMes(req, res, next){
     var filter = {};
     filter.include= [ valor , cliente, usuario]
     filter.raw= true;
-    filter.order= [['created_at', 'DESC']]
+    filter.order= [['created_at', 'DESC'],['created_at', 'DESC']]
     filter.where={
         created_at:{
             $gte: dtInicial,
