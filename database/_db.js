@@ -1,10 +1,11 @@
 var sequelize = require('sequelize');
+var debug = require('debug')('myapp:db:sequelize');
 
 var config = {
   "username": "redhat",
   "password": "redhat",
   "database": "atendimento_db",
-  "host": "localhost",
+  "host": process.env.db_url || 'localhost',
   "dialect": "postgres",
   "pool": {
     "max": 10,
@@ -14,18 +15,19 @@ var config = {
   "underscored":true,
   "timestamps": false,
   "omitNull": true,
-  "logging": true
+  "logging": debug
 }
 
 var db = new sequelize(config.database, config.username, config.password, config);
 
 db
-    .authenticate()
-    .then(function(err) {
-        console.log('Connection with database '+config.database+' has been established successfully.');
-    })
-    .catch(function (err) {
-        console.log('Unable to connect to the database:', err);
-    });
+.authenticate()
+.then(function(err) {
+    debug("Connecting  to database with the following config: \n %j",config)
+})
+.catch(function (err) {
+    debug("Error connecting  to database with the following config: \n %j",config)
+    debug('Error: %s', err);
+});
 
 module.exports = db;

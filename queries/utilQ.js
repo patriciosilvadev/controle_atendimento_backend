@@ -1,5 +1,5 @@
 var utilModel = {};
-var debug = require('debug')('utilQ');
+var debug = require('debug')('myapp:utilQ');
 
 
 utilModel.getDates = function(ano,mes,dia){

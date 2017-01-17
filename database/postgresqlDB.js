@@ -2,6 +2,8 @@
  * Connection Pool para o PostgreSQL
  */
 var promise = require('bluebird');
+var debug = require('debug')('myapp:db:postgres');
+
 
 var options = {
   promiseLib: promise
@@ -17,9 +19,9 @@ if(process.env.NODE_ENV=='dev'){
     monitor.setTheme('matrix'); // change the default theme;
     // Other themes: https://github.com/vitaly-t/pg-monitor/wiki/Color-Themes
 
-    monitor.log = function (msg, info) {
+    monitor.log = debug;/*function (msg, info) {
         // save the screen messages into your own log file;
-    };
+    };*/
 }
 
 var connectionString = {
