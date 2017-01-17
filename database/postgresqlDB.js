@@ -23,7 +23,7 @@ if(process.env.NODE_ENV=='dev'){
 }
 
 var connectionString = {
-    host:process.env.db_url || '192.168.0.50',//'191.182.25.177',
+    host:process.env.db_url || 'localhost',//'191.182.25.177',
     port: 5432,
     database: 'atendimento_db',
     user: 'redhat',

@@ -4,7 +4,7 @@ var config = {
   "username": "redhat",
   "password": "redhat",
   "database": "atendimento_db",
-  "host": "192.168.0.50",
+  "host": "localhost",
   "dialect": "postgres",
   "pool": {
     "max": 10,

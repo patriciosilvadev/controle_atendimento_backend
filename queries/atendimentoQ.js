@@ -26,7 +26,7 @@ function allAnoMes(req, res, next){
     var dtFinal= new Date(ano,dtInicial.getMonth()+1,0);;
 
     var filter = {};
-    filter.include= [ valor , cliente, usuario]
+    filter.include= [ valor , cliente, usuario, tipoAtendimento]
     filter.raw= true;
     filter.order= [['created_at', 'DESC'],['created_at', 'DESC']]
     filter.where={
