@@ -12,7 +12,7 @@ function allAnoMes(req, res, next){
     var ano=parseInt(req.params.ano);
 
     var dtInicial= new Date(ano,mes,1);
-    var dtFinal= new Date(ano,dtInicial.getMonth()+1,0);;
+    var dtFinal= new Date(ano,dtInicial.getMonth()+1,1);;
 
     var filter = {};
     filter.include= [{

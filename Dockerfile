@@ -11,7 +11,7 @@ ENV DEBUG=-myapp:*
 
 
 #app port to listen  
-ENV PORT=80 
+ENV PORT=4000
 
 RUN npm install --only=production
 
