@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var db_faturamento = require('../queries/faturamentoQuery');
+//var db_faturamento = require('../queries/faturamentoQuery');
 var faturamentoQ = require('../queries/faturamentoQ');
 
 

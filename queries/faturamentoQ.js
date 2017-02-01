@@ -42,6 +42,38 @@ function allAnoMes(req, res, next){
 
 }
 
+/*# GET #*/
+function allByClienteID(req, res, next){
+	var client=req.params.clientID;
+   
+    var filter = {};
+    filter.include= [{
+				model: valor,
+				include: [status],
+				required: true
+        	} , 
+			cliente,
+			usuario]
+    filter.raw= true;
+    filter.order= [['created_at', 'DESC']]
+    filter.where={
+        created_at:{
+            $gte: dtInicial,
+            $lte: dtFinal
+        }
+    };
+
+    atendimento.findAll(filter).then(function(atendimentos) {
+        atendimentos.forEach(function(at) {
+            dot.object(at);
+        });
+        res.json(atendimentos);
+    }).catch(function(err){
+        next(err);
+    });
+
+}
+
 /**
  * Fatura Atendimento por ID
  */
