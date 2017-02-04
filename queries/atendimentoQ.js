@@ -5,6 +5,8 @@ var atendimento = require('../database/models/atendimento');
 var tipoAtendimento = require('../database/models/tipo_atendimento');
 var db = require('../database/_db');
 var dot = require('dot-object');
+var StringMask = require('string-mask');
+
 
 /*# GET #*/
 function all(req, res, next){
@@ -34,6 +36,30 @@ function allAnoMes(req, res, next){
             $gte: dtInicial,
             $lte: dtFinal
         }
+    };
+
+    atendimento.findAll(filter).then(function(atendimentos) {
+        atendimentos.forEach(function(at) {
+            dot.object(at);
+        });
+        res.json(atendimentos);
+    }).catch(function(err){
+        next(err);
+    });
+
+}
+
+
+/*# GET #*/
+function allByClient(req, res, next){
+	var id=applyMask(req.params.id);
+
+    var filter = {};
+    filter.include= [ valor , cliente, usuario, tipoAtendimento]
+    filter.raw= true;
+    filter.order= [['created_at', 'DESC'],['created_at', 'DESC']]
+    filter.where={
+        cliente_id: id
     };
 
     atendimento.findAll(filter).then(function(atendimentos) {
@@ -155,11 +181,39 @@ function getById(req, res, next){
 
 }
 
+/**
+ * Pega Numero
+ */
+function getNumber(str){
+    if(str===undefined){
+        str="";
+    }
+    return str.replace(/[^\d]/g, '').slice(0, 14)
+}
+
+/**
+ * Aplica Mascara
+ */
+function applyMask(str){
+    var number = getNumber(str);
+    var cnpj = new StringMask('00.000.000\/0000-00');
+    var cpf = new StringMask('000.000.000-00');
+    var mascara ="";
+    if(number.length>11){
+        mascara = cnpj.apply(number);
+    }else{
+        mascara = cpf.apply(number);
+    }
+    return mascara.trim().replace('/[^0-9]$/', '');
+}
+
+
 
 module.exports = {
     insert:insert,
     all:all,
     getById:getById,
     update:update,
-    allAnoMes:allAnoMes
+    allAnoMes:allAnoMes,
+    allByClient:allByClient
 };
