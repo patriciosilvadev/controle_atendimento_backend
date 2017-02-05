@@ -30,7 +30,7 @@ function allAnoMes(req, res, next){
     var filter = {};
     filter.include= [ valor , cliente, usuario, tipoAtendimento]
     filter.raw= true;
-    filter.order= [['created_at', 'DESC'],['created_at', 'DESC']]
+    filter.order= [['aberto', 'DESC'],['created_at', 'DESC']]
     filter.where={
         created_at:{
             $gte: dtInicial,
@@ -140,16 +140,15 @@ function insert(req, res, next){
                     "finalizado_at": req.body.finalizado_at,
                     "problema": req.body.problema,
                     "solucao": req.body.solucao,
-                    aberto: true
+            
             };
 
-            if(req.body.finalizado!==undefined && req.body.finalizado){
+
+            if(req.body.aberto!==undefined && !req.body.aberto){
                 var dateFinalizado = new Date();
-                item.aberto=false;
                 item.finalizado_at=dateFinalizado;
-            }else{
-                item.aberto=true;
             }
+
             return tipoAtendimento.findById(item.tipo_atendimento_id,{transaction:t}).then(data=>{
                                 console.log(data);
                                 var options ={};
