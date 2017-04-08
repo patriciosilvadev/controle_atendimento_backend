@@ -79,13 +79,13 @@ function allByClienteID(req, res, next){
  */
 function faturar(req, res, next){
 	var id=parseInt(req.params.id);
-	
+	console.log(req.body.faturado_at);
 	valor.findById(id)
 	.then(function(instance) {
 		instance.updateAttributes({
 			status_id:req.body.status_id,
             motivo:req.body.motivo,
-			faturado_at:new Date()
+			faturado_at: req.body.faturado_at || new Date()
 		}).then(instance=>{
             res.json(instance);
         });

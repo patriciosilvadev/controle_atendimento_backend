@@ -15,6 +15,7 @@ var config = {
   "underscored":true,
   "timestamps": false,
   "omitNull": true,
+  "timezone": "Brazil/East",
   "logging": debug
 }
 
