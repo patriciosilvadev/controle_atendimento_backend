@@ -1,4 +1,7 @@
 var db = require('../database/postgresqlDB');
+var dateUtil = require('./utilQ');
+
+
 
 /**
  * Insere na tabela atendimento
@@ -11,49 +14,59 @@ var retorno = {
     var dia=parseInt(req.params.dia);
     var ano=parseInt(req.params.ano);
 
-    req.params.date= (ano+"-"+mes+"-"+dia);
+
+    var dates = dateUtil.getDates(ano,mes,dia);
+
+
     db.tx(function(t) {   
         return t.batch([
-            t.oneOrNone("select count(*) as total_ano from atendimento "
-                        +"where extract(year from data_inicio)=${ano}",req.params),
-            t.oneOrNone("select count(*) as total_mes from atendimento "
-                        +"where extract(year from data_inicio)=${ano} AND "
-                        +"extract(MONTH from data_inicio)=${mes}",req.params),
+
+            //total ano
+            t.oneOrNone("select count(*) as total from atendimento "
+                        +"where extract(year from created_at)=${ano}",req.params),
+
+            //total mes
+            t.oneOrNone("select count(*) as total from atendimento "
+                        +"where created_at>=${mes_inicio} AND "
+                        +"created_at<=${mes_fim}",dates),
+
+            //total semana
+            t.oneOrNone("select count(*) as total from atendimento "
+                        +"where created_at>=${semana_inicio} AND "
+                        +"created_at<=${semana_fim}",dates),
+            
+            //total chamado - mes
+            t.oneOrNone("select count(*) as total from atendimento "
+                        +"where chamado=true AND created_at>=${mes_inicio} AND "
+                        +"created_at<=${mes_fim}",dates),
+            
+
+            //destaques mes 
             t.any("select count(*) as total, "
-                        +"(select nome from usuario where usuario.usuario_id=atendimento.usuario_id) "
-                        +"from atendimento  "
-                        +"where extract(year from data_inicio)=${ano} AND "
-                        +"extract(MONTH from data_inicio)=${mes} "
-                        +"GROUP BY usuario_id  ORDER BY total DESC",req.params),
-            t.oneOrNone("select count(*) as total_semana "
-                        +"from atendimento "
-                        +"where extract(year from data_inicio)=${ano} AND "
-                        +"extract(MONTH from data_inicio)=${mes} AND "
-                        +"extract(WEEK from data_inicio) = extract(WEEK from to_date(${date}, 'YYYY-MM-DD'))",req.params),
-            t.oneOrNone("select count(*) as total_visitas from atendimento "
-                        +"INNER JOIN TIPO_ATENDIMENTO ON "
-                        +"ATENDIMENTO.tipo_atendimento_id=tipo_atendimento.tipo_atendimento_id "
-                        +"AND (descricao='Avulso Online' "
-                        +"OR descricao='Avulso Local') AND "
-                        +"extract(year from data_inicio)=${ano} AND "
-                        +"extract(MONTH from data_inicio)=${mes}",req.params),
-            t.any("select count(*) as total_tipo, "
-                        +"(select descricao from tipo_atendimento where tipo_atendimento.tipo_atendimento_id=atendimento.tipo_atendimento_id) "
-                        +"from atendimento "
-                        +"where extract(year from data_inicio)=${ano} AND "
-                        +"extract(MONTH from data_inicio)=${mes}  "
-                        +"GROUP BY descricao  ORDER BY total_tipo DESC",req.params)
+                +"usuario.nome as nome "
+                +"from atendimento INNER JOIN usuario ON atendimento.usuario_id=usuario.id "
+                +"where created_at>=${mes_inicio} AND "
+                +"created_at<=${mes_fim} "
+                +"GROUP BY nome  ORDER BY total DESC",dates),
+
+            //total por tipo
+            t.any("select count(*) as total, "
+                +"tipo_atendimento.descricao as descricao "
+                +"from atendimento INNER JOIN tipo_atendimento "
+                +"ON atendimento.tipo_atendimento_id=tipo_atendimento.id "
+                +"where created_at>=${mes_inicio} AND "
+                +"created_at<=${mes_fim} "
+                +"GROUP BY descricao  ORDER BY total DESC",dates)
             ]);
     })
     .then(function(data) {
         var retorno={};
-        retorno.total_ano=data[0].total_ano || 0;
-        retorno.total_mes=data[1].total_mes || 0;
-        retorno.destaques=data[2] || [];
-        retorno.total_semana=data[3].total_semana || 0;
-        retorno.total_visitas=data[4].total_visitas || 0;
-        retorno.porTipo=data[5] || [];
-        console.log(data);
+        retorno.total_ano=data[0].total || 0;
+        retorno.total_mes=data[1].total || 0;
+        retorno.total_semana=data[2].total || 0;
+        retorno.total_visitas=data[3].total || 0;
+        retorno.destaques=data[4] || [];
+        retorno.por_tipo=data[5] || [];
         res.status(200)
         .json(retorno);
     })
@@ -74,7 +87,7 @@ function teste(req, res, next){
     };
     db.tx(function(t) {   
         return t.oneOrNone("select count(*) as total_atendimentos from atendimento "
-                          +"where extract(year from data_inicio)=extract(year from to_date($1, 'YYYY-MM-DD'))",date);
+                          +"where extract(year from created_at)=extract(year from to_date($1, 'YYYY-MM-DD'))",date);
     })
     .then(function(data) {
         retorno.porTipo=data;

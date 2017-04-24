@@ -16,6 +16,7 @@ var io = require('socket.io')(server);
 
 
 var usuarioRouter = require('./routes/usuarioRouter');
+var utilRouter = require('./routes/utilRouter');
 var clienteRouter = require('./routes/clienteRouter');
 var atendimentoRounter = require('./routes/atendimentoRouter');
 var errorHandlingRouter = require('./routes/errorHandlingRouter');
@@ -49,6 +50,7 @@ app.use('/',middleware);
  * Add other routers
  */
 app.use('/',clienteRouter);
+app.use('/',utilRouter);
 app.use('/', usuarioRouter);
 app.use('/',atendimentoRounter);
 app.use('/',tipoAtendimentoRouter);

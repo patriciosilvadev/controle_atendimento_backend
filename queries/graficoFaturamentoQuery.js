@@ -1,4 +1,5 @@
 var db = require('../database/postgresqlDB');
+var dateUtil = require('./utilQ');
 
 /**
  * Insere na tabela atendimento
@@ -10,60 +11,70 @@ function all(req, res, next){
     var ano=parseInt(req.params.ano);
 
     req.params.date= (ano+"-"+mes+"-"+dia);
+    var dates = dateUtil.getDates(ano,mes,dia);
 
     db.tx(function(t) {
         return t.batch([   
-            t.oneOrNone("select sum(valor) as total_ano from atendimento "
-                    +"inner  join atendimento_valor on "
-                    +"atendimento.atendimento_id=atendimento_valor.at_id AND "
-                    +"atendimento_valor.status='faturado' AND "
-                    +"extract(year from data)=${ano}",req.params),
-            t.oneOrNone("select sum(valor) as total_mes from atendimento "
-                    +"inner  join atendimento_valor on "
-                    +"atendimento.atendimento_id=atendimento_valor.at_id AND "
-                    +"atendimento_valor.status='faturado' AND "
-                    +"extract(year from data)=${ano} AND "
-                    +"extract(MONTH from data)=${mes}",req.params),
-            t.oneOrNone("select sum(valor) as nao_aprovados from atendimento "
-                    +"inner  join atendimento_valor on "
-                    +"atendimento.atendimento_id=atendimento_valor.at_id AND "
-                    +"atendimento_valor.status='não aprovado' AND "
-                    +"extract(year from data)=${ano} AND "
-                    +"extract(MONTH from data)=${mes}",req.params),
-            t.any("select sum(valor) as total, nome from atendimento "
-                    +"inner  join atendimento_valor on "
-                    +"atendimento.atendimento_id=atendimento_valor.at_id AND "
-                    +"atendimento_valor.status='faturado' AND "
-                    +"extract(year from data)=${ano} AND "
-                    +"extract(MONTH from data)=${mes} "
-                    +"inner  join usuario on "
-                    +"atendimento.usuario_id=usuario.usuario_id "
-                    +"GROUP BY nome  ORDER BY total DESC",req.params),
-            t.oneOrNone("select sum(valor) as total_semana from atendimento "
-                    +"inner  join atendimento_valor on "
-                    +"atendimento.atendimento_id=atendimento_valor.at_id AND "
-                    +"atendimento_valor.status='faturado' AND "
-                    +"extract(year from data)=${ano} AND "
-                    +"extract(MONTH from data)=${mes} AND "
-                    +"extract(WEEK from data) = extract(WEEK from to_date(${date}, 'YYYY-MM-DD'))",req.params),
-            t.any("select sum(valor) as total_tipo, status as descricao from atendimento "
-                    +"inner  join atendimento_valor on "
-                    +"atendimento.atendimento_id=atendimento_valor.at_id AND "
-                    +"atendimento_valor.status!='aprovado' AND "
-                    +"extract(year from data)=${ano} AND "
-                    +"extract(MONTH from data)=${mes} "
-                    +"GROUP BY descricao  ORDER BY total_tipo DESC",req.params)
+
+            //ano
+            t.oneOrNone("select sum(valor.valor) as total from atendimento "
+                    +"inner join valor on atendimento.valor_id=valor.id "
+                    +"inner join status on status.id=valor.status_id "
+                    +"where status.descricao='FATURADO' AND "
+                    +"extract(year from faturado_at)=${ano}",req.params),
+            
+            //mes
+            t.oneOrNone("select sum(valor.valor) as total from atendimento "
+                    +"inner join valor on atendimento.valor_id=valor.id "
+                    +"inner join status on status.id=valor.status_id "
+                    +"where status.descricao='FATURADO' AND "
+                    +"faturado_at>=${mes_inicio} AND "
+                    +"faturado_at<=${mes_fim}",dates),
+            
+            //semana
+            t.oneOrNone("select sum(valor.valor) as total from atendimento "
+                    +"inner join valor on atendimento.valor_id=valor.id "
+                    +"inner join status on status.id=valor.status_id "
+                    +"where status.descricao='FATURADO' AND "
+                    +"faturado_at>=${semana_inicio} AND "
+                    +"faturado_at<=${semana_fim}",dates),
+            
+            //nao aprovados
+            t.oneOrNone("select sum(valor.valor) as total from atendimento "
+                    +"inner join valor on atendimento.valor_id=valor.id "
+                    +"inner join status on status.id=valor.status_id "
+                    +"where status.descricao='NÃO APROVADO' AND "
+                    +"faturado_at>=${mes_inicio} AND "
+                    +"faturado_at<=${mes_fim}",dates),
+                    
+            //destaques
+            t.any("select sum(valor.valor) as total, usuario.nome as nome from atendimento "
+                    +"inner join valor on atendimento.valor_id=valor.id "
+                    +"inner join status on status.id=valor.status_id "
+                    +"inner join usuario on usuario.id=atendimento.usuario_id "
+                    +"where status.descricao='FATURADO' AND "
+                    +"faturado_at>=${mes_inicio} AND "
+                    +"faturado_at<=${mes_fim} "
+                    +"GROUP BY nome  ORDER BY total DESC",dates),
+
+            //tipo
+            t.any("select sum(valor.valor) as total, status.descricao as descricao from atendimento "
+                    +"inner join valor on atendimento.valor_id=valor.id "
+                    +"inner join status on status.id=valor.status_id "
+                    +"where "
+                    +"faturado_at>=${mes_inicio} AND "
+                    +"faturado_at<=${mes_fim}"
+                    +"GROUP BY descricao  ORDER BY total DESC",dates)
         ]);
     })
     .then(function(data) {
         var retorno={};
-        retorno.total_ano=data[0].total_ano || 0;
-        retorno.total_mes=data[1].total_mes|| 0;
-        retorno.nao_aprovados=data[2].nao_aprovados|| 0;
-        retorno.destaques=data[3]|| [];
-        retorno.total_semana=data[4].total_semana || 0;
-        retorno.porTipo=data[5] || [];
-        console.log(data);
+        retorno.total_ano=data[0].total || 0;
+        retorno.total_mes=data[1].total|| 0;
+        retorno.total_semana=data[2].total || 0;
+        retorno.nao_aprovados=data[3].total|| 0;
+        retorno.destaques=data[4]|| [];
+        retorno.por_tipo=data[5] || [];
         res.status(200)
         .json(retorno);
     })
