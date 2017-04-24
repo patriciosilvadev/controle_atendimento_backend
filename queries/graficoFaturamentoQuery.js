@@ -44,8 +44,8 @@ function all(req, res, next){
                     +"inner join valor on atendimento.valor_id=valor.id "
                     +"inner join status on status.id=valor.status_id "
                     +"where status.descricao='NÃO APROVADO' AND "
-                    +"faturado_at>=${mes_inicio} AND "
-                    +"faturado_at<=${mes_fim}",dates),
+                    +"created_at>=${mes_inicio} AND "
+                    +"created_at<=${mes_fim}",dates),
                     
             //destaques
             t.any("select sum(valor.valor) as total, usuario.nome as nome from atendimento "
