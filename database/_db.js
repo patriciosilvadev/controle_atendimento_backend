@@ -2,8 +2,8 @@ var sequelize = require('sequelize');
 var debug = require('debug')('myapp:db:sequelize');
 
 var config = {
-  "username": "redhat",
-  "password": "redhat",
+  "username": process.env.DB_USERNAME || "redhat",
+  "password": process.env.DB_PASSWORD || "redhat",
   "database": "atendimento_db",
   "host": process.env.db_url || 'localhost',
   "dialect": "postgres",
