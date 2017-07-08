@@ -28,8 +28,8 @@ var connectionString = {
     host:process.env.db_url || 'localhost',//'191.182.25.177',
     port: 5432,
     database: 'atendimento_db',
-    user: 'redhat',
-    password: 'redhat'
+    user: process.env.DB_USERNAME || 'redhat',
+    password: process.env.DB_PASSWORD || 'redhat'
 };
 var db = pgp(connectionString);
 

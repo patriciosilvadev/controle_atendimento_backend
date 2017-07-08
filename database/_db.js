@@ -24,11 +24,13 @@ var db = new sequelize(config.database, config.username, config.password, config
 db
 .authenticate()
 .then(function(err) {
+    console.log("Connecting  to database with the following config: \n %j",config);
     debug("Connecting  to database with the following config: \n %j",config)
 })
 .catch(function (err) {
     debug("Error connecting  to database with the following config: \n %j",config)
     debug('Error: %s', err);
+    console.error('Error: %s', err);
 });
 
 module.exports = db;

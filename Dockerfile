@@ -6,8 +6,8 @@ WORKDIR /src
 
 # install the production dependencies from the package.json file
 ENV db_url=172.17.0.1
-ENV DB_USERNAME=''
-ENV DB_PASSWORD=''
+ENV DB_USERNAME='redhat'
+ENV DB_PASSWORD='redhat'
 
 ENV NODE_ENV=production
 ENV DEBUG=-myapp:*
