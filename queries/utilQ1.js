@@ -16,7 +16,6 @@ utilQ.all =  function(req, res, next) {
         retorno.tipo_acesso=data[0] || [];
         retorno.tipo_atendimento=data[1] || [];
         retorno.status=data[2] || [];
-        console.log(data);
         res.status(200)
         .json(retorno);
     })

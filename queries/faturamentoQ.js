@@ -79,7 +79,6 @@ function allByClienteID(req, res, next){
  */
 function faturar(req, res, next){
 	var id=parseInt(req.params.id);
-	console.log(req.body.faturado_at);
 	valor.findById(id)
 	.then(function(instance) {
 		instance.updateAttributes({

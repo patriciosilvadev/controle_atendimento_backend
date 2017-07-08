@@ -128,7 +128,6 @@ function insert(req, res, next){
             }
         , transaction: t})
         .then(c=>{
-            console.log(c);
             var item = {
                     "contato": req.body.contato,
                     "chamado": req.body.chamado,
@@ -150,7 +149,6 @@ function insert(req, res, next){
             }
 
             return tipoAtendimento.findById(item.tipo_atendimento_id,{transaction:t}).then(data=>{
-                                console.log(data);
                                 var options ={};
                                 options.transaction= t;
                                 if(data.descricao=="AVULSO ONLINE" || data.descricao=="AVULSO LOCAL"){

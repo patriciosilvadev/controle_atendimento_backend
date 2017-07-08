@@ -13,7 +13,7 @@ function all(req, res, next) {
         });
     })
     .catch(function (err) {
-      console.log("error "+err);
+      console.error("error "+err);
       return next(err);
     });
 }

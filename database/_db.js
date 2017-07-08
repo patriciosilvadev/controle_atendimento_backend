@@ -8,7 +8,7 @@ var config = {
   "host": process.env.db_url || 'localhost',
   "dialect": "postgres",
   "pool": {
-    "max": 10,
+    "max": 20,
     "min": 5
   },
   "freezeTableName": true,

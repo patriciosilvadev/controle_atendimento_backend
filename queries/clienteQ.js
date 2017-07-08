@@ -18,7 +18,6 @@ moduleCliente.all=function(req, res, next){
 moduleCliente.findByID= function(req, res, next){
 
     var cnpj = applyMask(req.params.cnpj);
-    console.log(cnpj);
     cliente
     .findOne({
         where: {

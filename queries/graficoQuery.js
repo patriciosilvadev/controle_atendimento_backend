@@ -80,9 +80,7 @@ function teste(req, res, next){
     var month=parseInt(req.params.month)-1;
     var day=parseInt(req.params.day);
     var year=parseInt(req.params.year);
-    console.log("Month"+month);
     var date = (year+"-"+month+"-"+day);
-    console.log(date);
     var retorno = {
     };
     db.tx(function(t) {   
@@ -91,7 +89,6 @@ function teste(req, res, next){
     })
     .then(function(data) {
         retorno.porTipo=data;
-        console.log(data);
         res.status(200)
         .json(retorno);
     })

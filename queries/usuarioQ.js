@@ -48,7 +48,6 @@ moduleUsuario.update= function(req, res, next){
  * Endpoint usado pelo servico da aplicacao
  */
 moduleUsuario.login=function(req,res,next){
-    console.log(req.body);
 
     usuario
     .findOne({
@@ -61,7 +60,6 @@ moduleUsuario.login=function(req,res,next){
     })
     .then(user=> {
 
-        console.log("Usuario " +user.username+" logado com sucesso!");
         user.token = jwt.sign(user, config.secret , {
         expiresIn : 60*60*24 // expires in 24 hours
     

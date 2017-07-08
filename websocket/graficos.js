@@ -38,11 +38,9 @@ module.exports=function(io){
             setInterval(function(){
                 socket.emit('chartUpdate', retorno);
             },2000);
-            console.log(data);
         })
         .catch(function(error) {
             // error
-            console.log(error);
             socket.emit('chartUpdate',  JSON.stringify(error));
         });
         socket.on('my other event', function (data) {

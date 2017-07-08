@@ -5,7 +5,6 @@ var db = require('../database/postgresqlDB');
 function all(req, res, next) {
   db.any('select * from tipo_atendimento')
     .then(function (data) {
-      console.log(data);
       res.status(200)
         .json({
           status: true,
@@ -14,7 +13,6 @@ function all(req, res, next) {
         });
     })
     .catch(function (err) {
-      console.log("error "+err);
       return next(err);
     });
 }

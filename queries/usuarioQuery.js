@@ -6,7 +6,6 @@ var jwt    = require('jsonwebtoken');
 function getTodosUsuarios(req, res, next) {
   //res.header("Access-Control-Allow-Origin", "*");
   //res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  console.log("get "+req.headers);
   db.any('select * from usuario')
     .then(function (data) {
       res.status(200)
@@ -18,7 +17,6 @@ function getTodosUsuarios(req, res, next) {
      // next();
     })
     .catch(function (err) {
-      console.log("error "+err);
       return next(err);
     });
 }
@@ -89,11 +87,9 @@ function deleta(req, res, next) {
  * Endpoint usado pelo servico da aplicacao
  */
 function login(req,res,next){
-   console.log(req.body);
    db.one('select username, email,tipo, nome,usuario_id '
    +'from usuario where username=${username} AND password=${password}',req.body)
   .then(function (user) {
-    console.log(user);
     user.token = jwt.sign(user, config.secret , {
         expiresIn : 60*60*24 // expires in 24 hours
     });

@@ -1,6 +1,5 @@
 node_modules/
 bin/
-public/
 public/index.html
 jsconfig.json
 typings.json
