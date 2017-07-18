@@ -62,8 +62,8 @@ function all(req, res, next){
                     +"inner join valor on atendimento.valor_id=valor.id "
                     +"inner join status on status.id=valor.status_id "
                     +"where "
-                    +"faturado_at>=${mes_inicio} AND "
-                    +"faturado_at<=${mes_fim}"
+                    +"created_at>=${mes_inicio} AND "
+                    +"created_at<=${mes_fim}"
                     +"GROUP BY descricao  ORDER BY total DESC",dates)
         ]);
     })
