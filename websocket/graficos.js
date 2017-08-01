@@ -1,10 +1,10 @@
 'use strict';
-var db = require('../database/postgresqlDB');
+const db = require('../database/postgresqlDB');
 module.exports=function(io){
     io.on('connection', function (socket) {
-        var retorno = {};
+        const retorno = {};
         db.tx(function(t) {   
-            var req ={
+            const req ={
                 ano:'2016',
                 mes:'10'
             };

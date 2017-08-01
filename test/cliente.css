@@ -1,11 +1,11 @@
-//During the test the env variable is set to test
+//During the test the env constiable is set to test
 process.env.NODE_ENV = 'test';
 
 //Require the dev-dependencies
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../app');
-var should = chai.should();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../app');
+const should = chai.should();
 
 chai.use(chaiHttp);
 describe('Teste do endpoint cliente', () => {
@@ -17,7 +17,7 @@ describe('Teste do endpoint cliente', () => {
      */
     describe('/Post cliente', () => {
       it('Nao deve funcionar', (done) => {
-      var cliente={
+      const cliente={
         'nome': 'TESTE EMPRESA', 
         };
         chai.request(server)
@@ -33,7 +33,7 @@ describe('Teste do endpoint cliente', () => {
             });
       });
       it('Deve colocar cliente', function(done) {
-      var cliente={
+      const cliente={
         'nome': 'TESTE EMPRESA', 
         'cnpj': '95284516000111'
         };
@@ -56,7 +56,7 @@ describe('Teste do endpoint cliente', () => {
   */
   describe('/GET/:nome cliente', () => {
       it('deve pegar o cliente pelo cnpj', (done) => {
-        var cliente={
+        const cliente={
             nome: 'TESTE EMPRESA', 
             cnpj : '95284516000111'
         };
@@ -78,7 +78,7 @@ describe('Teste do endpoint cliente', () => {
   */
   describe('/GET/:cnpj cliente', () => {
       it('Deve pegar o cliente pelo cnpj', (done) => {
-        var cliente={
+        const cliente={
             nome: 'TESTE EMPRESA', 
             cnpj : '95284516000111'
         };
@@ -98,7 +98,7 @@ describe('Teste do endpoint cliente', () => {
   * Put cliente
   */
   describe('/Put cliente', () => {
-        var cliente={
+        const cliente={
             nome: 'TESTE EMPRESA Atualizado', 
             cnpj : '95284516000111'
         };
@@ -141,7 +141,7 @@ describe('Teste do endpoint cliente', () => {
    * Delete cliente
    */
   describe('/Delete cliente', () => {
-        var cliente={
+        const cliente={
             nome: 'TESTE EMPRESA', 
             cnpj : '95284516000111'
         };

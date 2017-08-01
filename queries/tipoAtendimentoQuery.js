@@ -1,8 +1,8 @@
-var db = require('../database/postgresqlDB');
+const db = require('../database/postgresqlDB');
 /**
  * Pega todos os tipos
  */
-function all(req, res, next) {
+const all = (req, res, next) => {
   db.any('select * from tipo_atendimento')
     .then(function (data) {
       res.status(200)
@@ -12,7 +12,7 @@ function all(req, res, next) {
           message: 'Retornou todos os clientes!!!'
         });
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }

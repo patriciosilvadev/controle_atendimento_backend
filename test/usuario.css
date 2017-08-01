@@ -1,11 +1,11 @@
-//During the test the env variable is set to test
+//During the test the env constiable is set to test
 process.env.NODE_ENV = 'test';
 
 //Require the dev-dependencies
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../app');
-var should = chai.should();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../app');
+const should = chai.should();
 
 chai.use(chaiHttp);
 describe('Teste do endpoint usuario', () => {
@@ -14,7 +14,7 @@ beforeEach((done) => { //Before each test we empty the database
     });
     describe('/Post usuario', () => {
       it('Nao deve funcionar', (done) => {
-        var usuario = {
+        const usuario = {
                 'nome': 'vitor2', 
                 'email': 'vlima2@redhat.com',
                 'tipo':'administrador'
@@ -32,7 +32,7 @@ beforeEach((done) => { //Before each test we empty the database
             });
       });
       it('Deve colocar usuario', function(done) {
-        var usuario={
+        const usuario={
                 'nome': 'vitor2', 
                 'email': 'vlima2@redhat.com',
                 'username':'vitor2',
@@ -58,7 +58,7 @@ beforeEach((done) => { //Before each test we empty the database
   */
   describe('/GET/:username usuario', () => {
       it('it should GET a book by the given id', (done) => {
-        var usuario={
+        const usuario={
                 'nome': 'vitor2', 
                 'email': 'vlima2@redhat.com',
                 'username':'vitor2',
@@ -84,7 +84,7 @@ beforeEach((done) => { //Before each test we empty the database
   * Put usuario
   */
   describe('/Put usuario', () => {
-    var usuario={
+    const usuario={
         'nome': 'vitor2', 
         'email': 'vlima2@redhat.com',
         'username':'vitor2',
@@ -135,7 +135,7 @@ beforeEach((done) => { //Before each test we empty the database
    * Delete usuario
    */
   describe('/Delete usuario', () => {
-    var usuario={
+    const usuario={
         'nome': 'vitor2', 
         'email': 'vlima2@redhat.com',
         'username':'vitor2',

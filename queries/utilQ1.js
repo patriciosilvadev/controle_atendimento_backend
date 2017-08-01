@@ -1,4 +1,4 @@
-var db = require('../database/postgresqlDB');
+const db = require('../database/postgresqlDB');
 
 utilQ = {};
 
@@ -12,7 +12,7 @@ utilQ.all =  function(req, res, next) {
         ]);
     })
     .then(function(data) {
-        var retorno={};
+        const retorno={};
         retorno.tipo_acesso=data[0] || [];
         retorno.tipo_atendimento=data[1] || [];
         retorno.status=data[2] || [];

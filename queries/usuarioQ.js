@@ -1,13 +1,13 @@
-var usuario = require('../database/models/usuario');
-var sequelize = require('sequelize');
-var config = require('../config'); 
-var jwt    = require('jsonwebtoken');
+const usuario = require('../database/models/usuario');
+const sequelize = require('sequelize');
+const config = require('../config'); 
+const jwt    = require('jsonwebtoken');
 
 
-var moduleUsuario = {};
+const moduleUsuario = {};
 
 /*# GET #*/
-moduleUsuario.findByID= function(req, res, next){
+moduleUsuario.findByID = (req, res, next) => {
 
     usuario
     .findOne({
@@ -24,7 +24,7 @@ moduleUsuario.findByID= function(req, res, next){
 }
 
 /*# Update Usuario #*/
-moduleUsuario.update= function(req, res, next){
+moduleUsuario.update = (req, res, next) => {
 
     usuario
     .findOne({
@@ -47,7 +47,7 @@ moduleUsuario.update= function(req, res, next){
 /**
  * Endpoint usado pelo servico da aplicacao
  */
-moduleUsuario.login=function(req,res,next){
+moduleUsuario.login = (req,res,next) => {
 
     usuario
     .findOne({
@@ -66,7 +66,7 @@ moduleUsuario.login=function(req,res,next){
         });
         res.status(200).json(user);
      })
-    .catch(function (err) {
+    .catch( err => {
         res.status(403).json(err);
     });
 
@@ -75,7 +75,7 @@ moduleUsuario.login=function(req,res,next){
 
 
 /*# POST #*/
-function insert(req, res, next){
+const insert = (req, res, next) => {
 
    /*  cliente.create(req.body).then(function(cliente) {
         res.json(cliente);

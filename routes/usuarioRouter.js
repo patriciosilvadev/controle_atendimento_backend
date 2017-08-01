@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var usuarioQ = require('../queries/usuarioQ');
+const express = require('express');
+const router = express.Router();
+const usuarioQ = require('../queries/usuarioQ');
 
-var db_usuarios = require('../queries/usuarioQuery');
+const db_usuarios = require('../queries/usuarioQuery');
 
 //usuarios routers
 router.get('/api/usuarios', db_usuarios.all);

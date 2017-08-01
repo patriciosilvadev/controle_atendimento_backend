@@ -1,7 +1,7 @@
-var Sequelize = require('sequelize');
-var db = require('../_db');
+const Sequelize = require('sequelize');
+const db = require('../_db');
 
-var tipo_atendimento = db.define('tipo_atendimento', 
+const tipo_atendimento = db.define('tipo_atendimento', 
 {
     id: {
         type: Sequelize.INTEGER,

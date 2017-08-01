@@ -1,13 +1,13 @@
-var Sequelize = require('sequelize');
-var db = require('../_db');
+const Sequelize = require('sequelize');
+const db = require('../_db');
 
-var cliente = require('./cliente');
-var usuario = require('./usuario');
-var valor = require('./valor');
-var tipo_atendimento = require('./tipo_atendimento');
-var tipo_acesso = require('./tipo_acesso');
+const cliente = require('./cliente');
+const usuario = require('./usuario');
+const valor = require('./valor');
+const tipo_atendimento = require('./tipo_atendimento');
+const tipo_acesso = require('./tipo_acesso');
 
-var atendimento = db.define('atendimento', 
+const atendimento = db.define('atendimento', 
 {
     id: {
         type: Sequelize.BIGINT,

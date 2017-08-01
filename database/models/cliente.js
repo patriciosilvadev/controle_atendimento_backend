@@ -1,7 +1,7 @@
-var Sequelize = require('sequelize');
-var db = require('../_db');
+const Sequelize = require('sequelize');
+const db = require('../_db');
 
-var cliente = db.define('cliente', 
+const cliente = db.define('cliente', 
 {
     cnpj: {
         type: Sequelize.CHAR(20),

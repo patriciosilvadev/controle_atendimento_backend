@@ -1,12 +1,12 @@
-//During the test the env variable is set to test
-process.env.NODE_ENV = 'prod';
+//During the test the env constiable is set to test
+process.env.NODE_ENV = 'development';
 
 //Require the dev-dependencies
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../app');
-var should = chai.should();
-var atendimento = {
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../app');
+const should = chai.should();
+const atendimento = {
     "contato": "Vitor - Contato",
     "chamado": true,
     "problema": "Teste Atendimento - Problema",
@@ -29,7 +29,7 @@ var atendimento = {
         "tipo": "atendente"
     }
 };
-var token ="";
+const token ="";
 
 chai.use(chaiHttp);
 describe('Teste do endpoint atendimento', () => {
@@ -80,7 +80,7 @@ beforeEach((done) => { //Before each test we empty the database
         });
 
         /*it('Deve colocar atendimento', function(done) {
-            var atendimento={
+            const atendimento={
                 contato: 'Contato Teste', 
                 cnpj: '63786145000180',
                 nome:'Test CNPJ',

@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 
-var db_grafico = require('../queries/graficoFaturamentoQuery');
+const db_grafico = require('../queries/graficoFaturamentoQuery');
 
 
 //usuarios routers

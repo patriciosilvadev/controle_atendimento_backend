@@ -1,24 +1,24 @@
-var db = require('../database/postgresqlDB');
-var dateUtil = require('./utilQ');
+const db = require('../database/postgresqlDB');
+const dateUtil = require('./utilQ');
 
 
 
 /**
  * Insere na tabela atendimento
  */
-function all(req, res, next){
-var retorno = {
+const all = (req, res, next) =>{
+    const retorno = {
     };
 
-    var mes=parseInt(req.params.mes);
-    var dia=parseInt(req.params.dia);
-    var ano=parseInt(req.params.ano);
+    const mes=parseInt(req.params.mes);
+    const dia=parseInt(req.params.dia);
+    const ano=parseInt(req.params.ano);
 
 
-    var dates = dateUtil.getDates(ano,mes,dia);
+    const dates = dateUtil.getDates(ano,mes,dia);
 
 
-    db.tx(function(t) {   
+    db.tx( t => {   
         return t.batch([
 
             //total ano
@@ -59,8 +59,8 @@ var retorno = {
                 +"GROUP BY descricao  ORDER BY total DESC",dates)
             ]);
     })
-    .then(function(data) {
-        var retorno={};
+    .then( data => {
+        const retorno={};
         retorno.total_ano=data[0].total || 0;
         retorno.total_mes=data[1].total || 0;
         retorno.total_semana=data[2].total || 0;
@@ -70,29 +70,29 @@ var retorno = {
         res.status(200)
         .json(retorno);
     })
-    .catch(function(error) {
+    .catch( error => {
         // error
         next(error);
     })
 }  
 
-function teste(req, res, next){
-    var month=parseInt(req.params.month)-1;
-    var day=parseInt(req.params.day);
-    var year=parseInt(req.params.year);
-    var date = (year+"-"+month+"-"+day);
-    var retorno = {
+const teste = (req, res, next) =>{
+    const month=parseInt(req.params.month)-1;
+    const day=parseInt(req.params.day);
+    const year=parseInt(req.params.year);
+    const date = (year+"-"+month+"-"+day);
+    const retorno = {
     };
-    db.tx(function(t) {   
+    db.tx((t) =>{   
         return t.oneOrNone("select count(*) as total_atendimentos from atendimento "
                           +"where extract(year from created_at)=extract(year from to_date($1, 'YYYY-MM-DD'))",date);
     })
-    .then(function(data) {
+    .then((data) =>{
         retorno.porTipo=data;
         res.status(200)
         .json(retorno);
     })
-    .catch(function(error) {
+    .catch((error) =>{
         // error
         next(error);
     })

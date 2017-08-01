@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-//var db_atendimento = require('../queries/atendimentoQuery');
-var atendimentoQ = require('../queries/atendimentoQ');
+const express = require('express');
+const router = express.Router();
+//const db_atendimento = require('../queries/atendimentoQuery');
+const atendimentoQ = require('../queries/atendimentoQ');
 
 
 router.post('/api/atendimentos', atendimentoQ.insert);

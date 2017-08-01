@@ -1,10 +1,10 @@
-var utilModel = {};
-var debug = require('debug')('myapp:utilQ');
+const utilModel = {};
+const debug = require('debug')('myapp:utilQ');
 
 
 utilModel.getDates = function(ano,mes,dia){
     
-    var returnDates= {};
+    const returnDates= {};
 
     //ano
     returnDates.ano_inicio=new Date(ano,0,1)
@@ -15,7 +15,7 @@ utilModel.getDates = function(ano,mes,dia){
     returnDates.mes_fim=new Date(ano,mes+1,0);
 
     //semana
-    var semana=new Date(ano,mes,dia);
+    const semana=new Date(ano,mes,dia);
     returnDates.semana_inicio=new Date(ano,mes,semana.getDate()-semana.getDay());
     returnDates.semana_fim=new Date(returnDates.semana_inicio.getFullYear(),returnDates.semana_inicio.getMonth(),returnDates.semana_inicio.getDate()+6);
 
