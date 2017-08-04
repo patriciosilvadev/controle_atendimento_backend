@@ -68,7 +68,7 @@ const applyMask = (str) => {
     const number = getNumber(str);
     const cnpj = new StringMask('00.000.000\/0000-00');
     const cpf = new StringMask('000.000.000-00');
-    const mascara ="";
+    let mascara = "";
     if(number.length>11){
         mascara = cnpj.apply(number);
     }else{
