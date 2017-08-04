@@ -1,9 +1,9 @@
-var Sequelize = require('sequelize');
-var db = require('../_db');
-var status = require('./status');
+const Sequelize = require('sequelize');
+const db = require('../_db');
+const status = require('./status');
 
 
-var valor = db.define('valor', 
+const valor = db.define('valor', 
 {
     id: {
         type: Sequelize.BIGINT,

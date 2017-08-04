@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 
-var db_tipo = require('../queries/tipoAtendimentoQuery');
+const db_tipo = require('../queries/tipoAtendimentoQuery');
 
 
 //usuarios routers

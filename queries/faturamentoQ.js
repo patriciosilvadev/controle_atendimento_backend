@@ -1,20 +1,20 @@
-var cliente = require('../database/models/cliente');
-var valor = require('../database/models/valor');
-var usuario = require('../database/models/usuario');
-var atendimento = require('../database/models/atendimento');
-var status = require('../database/models/status');
-var db = require('../database/_db');
-var dot = require('dot-object');
+const cliente = require('../database/models/cliente');
+const valor = require('../database/models/valor');
+const usuario = require('../database/models/usuario');
+const atendimento = require('../database/models/atendimento');
+const status = require('../database/models/status');
+const db = require('../database/_db');
+const dot = require('dot-object');
 
 /*# GET #*/
-function allAnoMes(req, res, next){
-	var mes=parseInt(req.params.mes);
-    var ano=parseInt(req.params.ano);
+const allAnoMes = (req, res, next) => {
 
-    var dtInicial= new Date(ano,mes,1);
-    var dtFinal= new Date(ano,dtInicial.getMonth()+1,1);;
+    const {mes, ano} = req.params;
 
-    var filter = {};
+    const dtInicial= new Date(ano,mes,1);
+    const dtFinal= new Date(ano,dtInicial.getMonth()+1,1);;
+
+    const filter = {};
     filter.include= [{
 				model: valor,
 				include: [status],
@@ -31,8 +31,8 @@ function allAnoMes(req, res, next){
         }
     };
 
-    atendimento.findAll(filter).then(function(atendimentos) {
-        atendimentos.forEach(function(at) {
+    atendimento.findAll(filter).then( atendimentos => {
+        atendimentos.forEach( at => {
             dot.object(at);
         });
         res.json(atendimentos);
@@ -43,10 +43,10 @@ function allAnoMes(req, res, next){
 }
 
 /*# GET #*/
-function allByClienteID(req, res, next){
-	var client=req.params.clientID;
+const allByClienteID = (req, res, next) => {
+	const client=req.params.clientID;
    
-    var filter = {};
+    const filter = {};
     filter.include= [{
 				model: valor,
 				include: [status],
@@ -63,12 +63,14 @@ function allByClienteID(req, res, next){
         }
     };
 
-    atendimento.findAll(filter).then(function(atendimentos) {
-        atendimentos.forEach(function(at) {
+    atendimento.findAll(filter).then( atendimentos => {
+
+        atendimentos.forEach( at =>  {
             dot.object(at);
         });
         res.json(atendimentos);
-    }).catch(function(err){
+
+    }).catch( err => {
         next(err);
     });
 
@@ -77,25 +79,24 @@ function allByClienteID(req, res, next){
 /**
  * Fatura Atendimento por ID
  */
-function faturar(req, res, next){
-	var id=parseInt(req.params.id);
+const faturar = (req, res, next) => {
+	const id=parseInt(req.params.id);
 	valor.findById(id)
-	.then(function(instance) {
+	.then(instance => {
 		instance.updateAttributes({
 			status_id:req.body.status_id,
             motivo:req.body.motivo,
 			faturado_at: req.body.faturado_at || new Date()
-		}).then(instance=>{
+		}).then(instance => {
             res.json(instance);
         });
 	})
-	.catch(function(error) {
+	.catch( error => {
 		// error
 		next(error);
 	});
 
 }
-
 
 module.exports = {
   allAnoMes:allAnoMes,

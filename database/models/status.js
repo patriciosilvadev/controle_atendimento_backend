@@ -1,7 +1,7 @@
-var Sequelize = require('sequelize');
-var db = require('../_db');
+const Sequelize = require('sequelize');
+const db = require('../_db');
 
-var status = db.define('status', 
+const status = db.define('status', 
 {
     id: {
         type: Sequelize.INTEGER,

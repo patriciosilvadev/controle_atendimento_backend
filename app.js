@@ -1,31 +1,31 @@
 'use strict';
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var cors = require('cors');
-var http = require('http');
-var app = express();
-var port = process.env.PORT || 4000;
-var server = app.listen(port, function () {
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const http = require('http');
+const app = express();
+const port = process.env.PORT || 4000;
+const server = app.listen(port, function () {
   console.log('App rodando na porta: '+port);
 });
-var io = require('socket.io')(server);
+const io = require('socket.io')(server);
 
 
-var usuarioRouter = require('./routes/usuarioRouter');
-var utilRouter = require('./routes/utilRouter');
-var clienteRouter = require('./routes/clienteRouter');
-var atendimentoRounter = require('./routes/atendimentoRouter');
-var errorHandlingRouter = require('./routes/errorHandlingRouter');
-var tipoAtendimentoRouter = require('./routes/tipoAtendimentoRouter');
-var graficoRouter = require('./routes/graficoRouter');
-var graficoFaturamentoRouter = require('./routes/graficoFaturamentoRouter');
-var faturamentoRouter = require('./routes/faturamentoRouter');
-var middleware = require('./middleware/authentication');
-var socketChart = require("./websocket/graficos")(io);
+const usuarioRouter = require('./routes/usuarioRouter');
+const utilRouter = require('./routes/utilRouter');
+const clienteRouter = require('./routes/clienteRouter');
+const atendimentoRounter = require('./routes/atendimentoRouter');
+const errorHandlingRouter = require('./routes/errorHandlingRouter');
+const tipoAtendimentoRouter = require('./routes/tipoAtendimentoRouter');
+const graficoRouter = require('./routes/graficoRouter');
+const graficoFaturamentoRouter = require('./routes/graficoFaturamentoRouter');
+const faturamentoRouter = require('./routes/faturamentoRouter');
+const middleware = require('./middleware/authentication');
+const socketChart = require("./websocket/graficos")(io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -64,7 +64,7 @@ app.use(errorHandlingRouter);
 
 // catch 404 and forward to error handler
 /*app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });*/

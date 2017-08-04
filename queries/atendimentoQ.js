@@ -1,33 +1,38 @@
-var cliente = require('../database/models/cliente');
-var valor = require('../database/models/valor');
-var usuario = require('../database/models/usuario');
-var atendimento = require('../database/models/atendimento');
-var tipoAtendimento = require('../database/models/tipo_atendimento');
-var db = require('../database/_db');
-var dot = require('dot-object');
-var StringMask = require('string-mask');
+const cliente = require('../database/models/cliente');
+const valor = require('../database/models/valor');
+const usuario = require('../database/models/usuario');
+const atendimento = require('../database/models/atendimento');
+const tipoAtendimento = require('../database/models/tipo_atendimento');
+const db = require('../database/_db');
+const dot = require('dot-object');
+const StringMask = require('string-mask');
 
 
-/*# GET #*/
-function all(req, res, next){
+/**
+ * Get All Atendimentos Including Its Valor
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+const all = (req, res, next) => {
 
-     atendimento.findAll({include: [ valor ]}).then(function(atendimentos) {
+     atendimento.findAll({include: [ valor ]}).then((atendimentos) => {
         res.json(atendimentos);
-     }).catch(function(err){
+     }).catch((err) => {
 		next(err);
 	});
 
 }
 
 /*# GET #*/
-function allAnoMes(req, res, next){
-	var mes=parseInt(req.params.mes);
-    var ano=parseInt(req.params.ano);
+const allAnoMes = (req, res, next) => {
+	const mes=parseInt(req.params.mes);
+    const ano=parseInt(req.params.ano);
 
-    var dtInicial= new Date(ano,mes,1);
-    var dtFinal= new Date(ano,dtInicial.getMonth()+1,1);
+    const dtInicial= new Date(ano,mes,1);
+    const dtFinal= new Date(ano,dtInicial.getMonth()+1,1);
 
-    var filter = {};
+    const filter = {};
     filter.include= [ valor , cliente, usuario, tipoAtendimento]
     filter.raw= true;
     filter.order= [['aberto', 'DESC'],['created_at', 'DESC']]
@@ -38,12 +43,12 @@ function allAnoMes(req, res, next){
         }
     };
 
-    atendimento.findAll(filter).then(function(atendimentos) {
-        atendimentos.forEach(function(at) {
+    atendimento.findAll(filter).then((atendimentos) => {
+        atendimentos.forEach((at) => {
             dot.object(at);
         });
         res.json(atendimentos);
-    }).catch(function(err){
+    }).catch((err) => {
         next(err);
     });
 
@@ -52,9 +57,9 @@ function allAnoMes(req, res, next){
 
 /*# GET #*/
 function allByClient(req, res, next){
-	var id=applyMask(req.params.id);
+	const id=applyMask(req.params.id);
 
-    var filter = {};
+    const filter = {};
     filter.include= [ valor , cliente, usuario, tipoAtendimento]
     filter.raw= true;
     filter.order= [['created_at', 'DESC'],['created_at', 'DESC']]
@@ -62,12 +67,12 @@ function allByClient(req, res, next){
         cliente_id: id
     };
 
-    atendimento.findAll(filter).then(function(atendimentos) {
-        atendimentos.forEach(function(at) {
+    atendimento.findAll(filter).then((atendimentos) => {
+        atendimentos.forEach((at) => {
             dot.object(at);
         });
         res.json(atendimentos);
-    }).catch(function(err){
+    }).catch((err) => {
         next(err);
     });
 
@@ -76,7 +81,7 @@ function allByClient(req, res, next){
 /*# PUT #*/
 function update(req, res, next){
 
-    db.transaction(function (t) { 
+    db.transaction( (t) => { 
         return atendimento
         .find({
             include: [ valor ],
@@ -84,7 +89,7 @@ function update(req, res, next){
                 id: req.params.id
             }
         }, {transaction: t})
-        .then(at=>{
+        .then( at => {
             if(at){
                 if(at.valor){
                     at.valor
@@ -96,9 +101,9 @@ function update(req, res, next){
                 throw new Error();
             }
         })
-        .then(at=>{
+        .then( at => {
             if(req.body.aberto==false && at.aberto!==false){
-                var dateFinalizado = new Date();
+                const dateFinalizado = new Date();
                 req.body.aberto=false;
                 req.body.finalizado_at=dateFinalizado;
             }else{
@@ -107,9 +112,9 @@ function update(req, res, next){
             return at.updateAttributes(req.body,{omitNull: true,transaction: t});
         });
 
-    }).then(function (result) {
+    }).then( result => {
         res.json(result);
-    }).catch(function (err) {
+    }).catch((err) => {
         next(err);
     });
 
@@ -128,7 +133,7 @@ function insert(req, res, next){
             }
         , transaction: t})
         .then(c=>{
-            var item = {
+            const item = {
                     "contato": req.body.contato,
                     "chamado": req.body.chamado,
                     "tipo_acesso_id": req.body.tipo_acesso_id,
@@ -144,12 +149,12 @@ function insert(req, res, next){
 
 
             if(req.body.aberto!==undefined && !req.body.aberto){
-                var dateFinalizado = new Date();
+                const dateFinalizado = new Date();
                 item.finalizado_at=dateFinalizado;
             }
 
             return tipoAtendimento.findById(item.tipo_atendimento_id,{transaction:t}).then(data=>{
-                                var options ={};
+                                const options ={};
                                 options.transaction= t;
                                 if(data.descricao=="AVULSO ONLINE" || data.descricao=="AVULSO LOCAL"){
                                         item.valor= req.body.valor;
@@ -160,7 +165,7 @@ function insert(req, res, next){
         });
     }).then(function (result) {
         res.json(result);
-    }).catch(function (err) {
+    }).catch( err => {
         next(err);
     });
 
@@ -192,10 +197,10 @@ function getNumber(str){
  * Aplica Mascara
  */
 function applyMask(str){
-    var number = getNumber(str);
-    var cnpj = new StringMask('00.000.000\/0000-00');
-    var cpf = new StringMask('000.000.000-00');
-    var mascara ="";
+    const number = getNumber(str);
+    const cnpj = new StringMask('00.000.000\/0000-00');
+    const cpf = new StringMask('000.000.000-00');
+    const mascara ="";
     if(number.length>11){
         mascara = cnpj.apply(number);
     }else{

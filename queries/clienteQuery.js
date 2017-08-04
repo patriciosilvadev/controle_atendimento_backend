@@ -1,4 +1,4 @@
-var db = require('../database/postgresqlDB');
+const db = require('../database/postgresqlDB');
 /**
  * Pega todos os cliente
  */
@@ -6,13 +6,9 @@ function all(req, res, next) {
   db.any('select * from cliente')
     .then(function (data) {
       res.status(200)
-        .json({
-          status: true,
-          data: data,
-          message: 'Retornou todos os clientes!!!'
-        });
+        .json(data);
     })
-    .catch(function (err) {
+    .catch( err => {
       console.error("error "+err);
       return next(err);
     });
@@ -20,21 +16,21 @@ function all(req, res, next) {
 /**
  * Faz o fetch to cliente pelo CNPJ
  */
-function fetchCNPJ(req, res, next) {
-  var cnpj = parseInt(req.params.cnpj);
-  db.oneOrNone('select * from cliente where cnpj= $1', cnpj)
+const fetchCNPJ = (req, res, next) =>{
+  const cnpj = req.params.cnpj;
+  db.oneOrNone('select * from cliente where cnpj=$1', cnpj)
     .then(function (data) {
       res.status(200)
         .json(
           data);
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
 
-function fetchNOME(req, res, next) {
-  var nome = req.params.nome;
+const fetchNOME = (req, res, next)  => {
+  const nome = req.params.nome;
   db.one('select * from cliente where nome= $1', nome)
     .then(function (data) {
       res.status(200)
@@ -44,28 +40,29 @@ function fetchNOME(req, res, next) {
           message: 'Achou cliente com nome '+nome
         });
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
 //insert usuarios
-function create(req, res, next) {
+const create = (req, res, next) => {
   req.body.cnpj = parseInt(req.body.cnpj);
+  
   db.none('insert into cliente(nome, cnpj)' +
       'values(${nome}, ${cnpj})',
     req.body)
-    .then(function () {
+    .then( () => {
       res.status(200)
         .json({
           status: true,
           message: 'Inserio usuario com sucesso!!'
         });
     })
-    .catch(function (err) {
+    .catch( err =>  {
       return next(err);
     });
 }
-function update(req, res, next) {
+const update = (req, res, next) => {
     req.body.cnpj = parseInt(req.body.cnpj);
     db.none('update cliente set nome=${nome} where cnpj=${cnpj}',
     req.body)
@@ -76,13 +73,13 @@ function update(req, res, next) {
           message: 'Atualizado com sucesso'
         });
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
 
-function deleta(req, res, next) {
-  var cnpj = parseInt(req.params.cnpj);
+const deleteByCNPJ = (req, res, next) => {
+  const cnpj = parseInt(req.params.cnpj);
   db.result('delete from cliente where cnpj = $1', cnpj)
     .then(function (result) {
       res.status(200)
@@ -91,7 +88,7 @@ function deleta(req, res, next) {
           message: `Removed ${result.rowCount} puppy`
         });
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
@@ -99,7 +96,7 @@ function deleta(req, res, next) {
 module.exports = {
   all: all,
   update:update,
-  deleta:deleta,
+  deleteByCNPJ:deleteByCNPJ,
   fetchCNPJ:fetchCNPJ,
   fetchNOME:fetchNOME,
   create:create

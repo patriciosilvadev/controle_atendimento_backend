@@ -1,9 +1,9 @@
-var db = require('../database/postgresqlDB');
-var config = require('../config'); 
-var jwt    = require('jsonwebtoken');
+const db = require('../database/postgresqlDB');
+const config = require('../config'); 
+const jwt    = require('jsonwebtoken');
 
 // add query functions
-function getTodosUsuarios(req, res, next) {
+const getTodosUsuarios = (req, res, next) => {
   //res.header("Access-Control-Allow-Origin", "*");
   //res.header("Access-Control-Allow-Headers", "X-Requested-With");
   db.any('select * from usuario')
@@ -16,13 +16,13 @@ function getTodosUsuarios(req, res, next) {
         });
      // next();
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
 //get usuario por username
-function getUsuarioPorUsername(req, res, next) {
-  var usuario_id = parseInt(req.params.usuario_id);
+const getUsuarioPorUsername = (req, res, next) => {
+  const usuario_id = parseInt(req.params.usuario_id);
   db.one('select * from usuario where usuario_id= $1', usuario_id)
     .then(function (data) {
       res.status(200)
@@ -30,12 +30,12 @@ function getUsuarioPorUsername(req, res, next) {
           data
         );
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
 //insert usuarios
-function create(req, res, next) {
+const create = (req, res, next) => {
   db.none('insert into usuario(nome, email, username, password, tipo)' +
       'values(${nome}, ${email}, ${username}, ${password},${tipo})',
     req.body)
@@ -46,12 +46,13 @@ function create(req, res, next) {
           message: 'Inserio usuario com sucesso!!'
         });
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
-function update(req, res, next) {
-    var usuario_id = parseInt(req.params.usuario_id);
+
+const update = (req, res, next) => {
+    const usuario_id = parseInt(req.params.usuario_id);
     req.body.usuario_id=usuario_id;
     db.none('update usuario set nome=${nome}, email=${email}, username=${username}, password=${password}, tipo=${tipo} where usuario_id=${usuario_id}',
     req.body)
@@ -62,13 +63,13 @@ function update(req, res, next) {
           message: 'Atualizado com sucesso'
         });
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
 
-function deleta(req, res, next) {
-  var usuario_id = parseInt(req.params.usuario_id);
+const deleta = (req, res, next) => {
+  const usuario_id = parseInt(req.params.usuario_id);
   db.result('delete from usuario where usuario_id = $1', usuario_id)
     .then(function (result) {
       /* jshint ignore:start */
@@ -79,14 +80,14 @@ function deleta(req, res, next) {
         });
       /* jshint ignore:end */
     })
-    .catch(function (err) {
+    .catch( err => {
       return next(err);
     });
 }
 /**
  * Endpoint usado pelo servico da aplicacao
  */
-function login(req,res,next){
+const login = (req,res,next) => {
    db.one('select username, email,tipo, nome,usuario_id '
    +'from usuario where username=${username} AND password=${password}',req.body)
   .then(function (user) {
@@ -96,7 +97,7 @@ function login(req,res,next){
     res.status(200)
       .json(user);
   })
-  .catch(function (err) {
+  .catch( err => {
       res.status(403).json(err);
   });
 }
